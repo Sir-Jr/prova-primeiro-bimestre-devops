@@ -22,10 +22,10 @@
 ## Fase A — Fundação
 
 ### T1 — README e .gitignore
-- [ ] **Branch:** `main`
-- [ ] `README.md`: nome (Sirlande Martins), RA (6325269), descrição da API de Reservas, stack, estrutura
+- [x] **Branch:** `main`
+- [x] `README.md`: nome (Sirlande Martins), RA (6325269), descrição da API de Reservas, stack, estrutura
       de pastas e seções "Como rodar local" e "Como provisionar na AWS" (preenchidas nas tarefas seguintes)
-- [ ] `.gitignore`: `node_modules/`, `.env`, `.terraform/`, `*.tfstate`, `*.tfstate.*`, `*.tfvars`
+- [x] `.gitignore`: `node_modules/`, `.env`, `.terraform/`, `*.tfstate`, `*.tfstate.*`, `*.tfvars`
       (com exceção `!*.tfvars.example`), `*.pem`, `crash.log`, `.terraform.lock.hcl` **versionado** (não ignorar)
 - **Requisitos:** R4.4, R4.5, C4 · **Design:** D7
 - **Pronto quando:** `git check-ignore` confirma cada padrão proibido; README tem nome + RA

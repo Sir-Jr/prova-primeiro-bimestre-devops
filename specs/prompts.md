@@ -4,18 +4,31 @@ Log dos prompts principais usados na construção da solução, o que a IA gerou
 revisado, corrigido ou questionado antes de aceitar. Serve de base para a Questão 2 do
 `relatorio.md`.
 
+## Processo de trabalho
+
+Revisão cruzada entre duas IAs, com decisão humana em cada etapa:
+
+1. A **IA-autora** produz a entrega da etapa (spec, código, configuração) e para antes do commit.
+2. O usuário leva a entrega para a **IA-revisora** (outro agente, em outro painel), que devolve um
+   parecer: aprovado, ajustes obrigatórios e pontos de atenção.
+3. A IA-autora avalia o parecer **contra os fatos do repositório** (arquivos, `git log`, saídas de
+   comando) e aplica os ajustes ou registra uma contestação.
+4. O usuário decide cada ponto; só então a etapa é commitada.
+
+Os erros encontrados nesse ciclo, de qualquer uma das partes, ficam na tabela
+[Erros e correções](#erros-e-correções).
+
+## Registro de prompts
+
 | # | Tarefa | Prompt (resumo) | O que a IA gerou | Revisão / correção / questionamento |
 |---|--------|-----------------|------------------|-------------------------------------|
 | 1 | Planejamento | "Leia as regras da prova e o README, crie um plano de ação spec-driven e uma tabela de recomendações por etapa, para eu ler, pesquisar e questionar antes de qualquer execução" | Plano em 11 etapas com recomendação, risco e tópicos de pesquisa por etapa; levantou bloqueios do ambiente (Docker no WSL, credenciais AWS expiradas) e a pegadinha do SSL obrigatório no RDS PostgreSQL 15+ | Perguntei se a prova exige registrar todos os prompts (resposta: só os principais, na Questão 2) → decidi versionar este log. Defini os valores de `status`, a pasta `specs/` e onde citar a ferramenta de IA |
-| 2 | Spec — requisitos | "Escreva o `specs/requirements.md` a partir do enunciado da prova" | Requisitos R1–R10 com critérios de aceite no formato QUANDO/ENTÃO/DEVE, restrições do Learner Lab (C1–C6) e escopo excluído | _(preencher após a revisão)_ |
-| 3 | Spec — design | "Escreva o `specs/design.md` a partir do `requirements.md` aprovado, reaproveitando os módulos Terraform da Aula 06 e incorporando as notas da revisão (validar `:id` antes do banco; parser do DATE)" | Arquitetura local × AWS, modelo de dados, contrato das rotas, regras de validação, Dockerfile, Compose, estrutura do `infra/`, composição dos módulos, SGs, `user_data`, estratégia de validação, workflow Git e matriz de rastreabilidade | _(preencher após a revisão)_ |
-| 4 | Spec — tarefas | "Escreva o `specs/tasks.md` a partir do design aprovado: tarefas numeradas, com branch, arquivos, requisitos atendidos, critério de pronto, evidências e commits" | 12 tarefas em 5 fases (fundação, aplicação, containers, infraestrutura, relatório/entrega), com a publicação do repo marcada como dependente de autorização e a entrega travada em 01/10 | _(preencher após a revisão)_ |
+| 2 | Spec — requisitos | "Escreva o `specs/requirements.md` a partir do enunciado da prova" | Requisitos R1–R10 com critérios de aceite no formato QUANDO/ENTÃO/DEVE, restrições do Learner Lab (C1–C6) e escopo excluído | Confirmei DELETE 204, id inválido 404, data AAAA-MM-DD e PUT completo; pedi para explicitar no 1.6 que status omitido mantém o atual; anotei para o design validar o `:id` antes do banco e fixar o parser do DATE. |
+| 3 | Spec — design | "Escreva o `specs/design.md` a partir do `requirements.md` aprovado, reaproveitando os módulos Terraform da Aula 06 e incorporando as notas da revisão (validar `:id` antes do banco; parser do DATE)" | Arquitetura local × AWS, modelo de dados, contrato das rotas, regras de validação, Dockerfile, Compose, estrutura do `infra/`, composição dos módulos, SGs, `user_data`, estratégia de validação, workflow Git e matriz de rastreabilidade | Confirmei as 10 decisões; pedi healthcheck explícito da `api` no Compose (R3.2), proibir `set -x` no `user_data`, registrar que a senha também fica no tfstate, conferir o IP público da EC2 e tirar o `untaint` do contorno da SCP. |
+| 4 | Spec — tarefas | "Escreva o `specs/tasks.md` a partir do design aprovado: tarefas numeradas, com branch, arquivos, requisitos atendidos, critério de pronto, evidências e commits" | 12 tarefas em 5 fases (fundação, aplicação, containers, infraestrutura, relatório/entrega), com a publicação do repo marcada como dependente de autorização e a entrega travada em 01/10 | Confirmei `.terraform.lock.hcl` versionado, `*.tfvars` ignorado e o volume de commits; decidi manter o backend até depois do PR de 01/10; pedi `push --all` na T5 e Evidências no `entrega.md`; o pedido de commit único da spec foi substituído pela Fase 0 depois da contestação (E6). |
+| 5 | T1 — README e .gitignore | "Execute a T1: README com nome, RA e descrição, e .gitignore cobrindo os arquivos proibidos pelo enunciado" | `README.md` (descrição, stack, rotas, estrutura, seções de execução a preencher) e `.gitignore` (Node, `.env` com exceção do `.env.example`, Terraform com exceção do `*.tfvars.example`, chaves); padrões conferidos com `git check-ignore` | Aprovei o README e o `.gitignore`; pedi para descrever o fluxo de revisão cruzada numa seção própria ("Processo de trabalho") e citá-lo no README. |
 
 ## Erros e correções
-
-Fluxo de trabalho com duas IAs e decisão humana: a **IA-autora** escreve specs e código; o usuário
-leva cada entrega para a **IA-revisora** (outro agente, em outro painel), que devolve um parecer;
-a IA-autora avalia o parecer contra os fatos do repositório; o usuário decide.
 
 **Protocolo de registro**
 

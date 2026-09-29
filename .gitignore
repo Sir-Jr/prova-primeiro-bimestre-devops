@@ -1,0 +1,29 @@
+# Node.js
+node_modules/
+npm-debug.log*
+
+# Variáveis de ambiente (senhas reais) — versionar só o .env.example
+.env
+.env.*
+!.env.example
+
+# Terraform — state, cache de providers e variáveis com segredos
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+crash.log
+crash.*.log
+*.tfplan
+# .terraform.lock.hcl é versionado de propósito (fixa a versão do provider)
+
+# Chaves privadas
+*.pem
+*.key
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
