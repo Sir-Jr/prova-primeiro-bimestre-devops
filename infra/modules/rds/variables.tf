@@ -11,9 +11,15 @@ variable "db_username" {
 }
 
 variable "db_password" {
-  description = "Senha do usuário master (use apenas caracteres alfanuméricos)"
+  description = "Senha do usuário master (apenas letras e números, 8 a 128 caracteres)"
   type        = string
   sensitive   = true
+
+  # O RDS recusa / @ " e espaço; restringir a alfanuméricos evita erro no apply e problemas de escape
+  validation {
+    condition     = can(regex("^[A-Za-z0-9]{8,128}$", var.db_password))
+    error_message = "db_password deve ter de 8 a 128 caracteres, só letras e números."
+  }
 }
 
 variable "subnet_ids" {
@@ -35,7 +41,7 @@ variable "instance_class" {
 variable "engine_version" {
   description = "Versão major do PostgreSQL"
   type        = string
-  default     = "15"
+  default     = "16"
 }
 
 variable "allocated_storage" {

@@ -27,14 +27,27 @@ variable "security_group_ids" {
 }
 
 variable "key_name" {
-  description = "Nome do key pair para acesso SSH"
+  description = "Nome do key pair para acesso SSH (opcional; no Learner Lab: vockey)"
   type        = string
+  default     = null
+}
+
+variable "iam_instance_profile" {
+  description = "Instance profile já existente (no Learner Lab: LabInstanceProfile — o módulo não cria IAM)"
+  type        = string
+  default     = null
 }
 
 variable "user_data" {
   description = "Script de inicialização (texto puro; opcional)"
   type        = string
   default     = null
+}
+
+variable "user_data_replace_on_change" {
+  description = "Recriar a instância quando o user_data mudar (o cloud-init só roda no primeiro boot)"
+  type        = bool
+  default     = true
 }
 
 variable "environment" {
