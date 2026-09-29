@@ -57,7 +57,34 @@ prova-primeiro-bimestre-devops/
 
 ## Como rodar localmente
 
-_Preenchido na tarefa T4 (Docker Compose)._
+Pré-requisitos: Docker com o plugin Compose.
+
+```bash
+cp .env.example .env          # troque POSTGRES_PASSWORD por uma senha sua
+docker compose up -d --build  # sobe PostgreSQL e API (a API espera o banco ficar healthy)
+docker compose ps             # os dois serviços devem aparecer como (healthy)
+scripts/smoke-test.sh         # testa o CRUD e os casos de erro em http://localhost:3000
+```
+
+- O banco não publica a porta 5432 no host: só a API o acessa, pela rede `technova-net`.
+- Os dados ficam no volume nomeado `pgdata` e sobrevivem a `docker compose down`.
+  Para apagar tudo, inclusive os dados: `docker compose down -v`.
+- Sem o `.env`, o Compose recusa subir e informa que `POSTGRES_PASSWORD` precisa ser definida.
+
+Exemplos:
+
+```bash
+curl -X POST http://localhost:3000/reservas -H "Content-Type: application/json" \
+  -d '{"cliente":"Ana Souza","data":"2026-10-01"}'
+curl http://localhost:3000/reservas
+curl -X PUT http://localhost:3000/reservas/1 -H "Content-Type: application/json" \
+  -d '{"cliente":"Ana Souza","data":"2026-10-02","status":"confirmada"}'
+curl -X DELETE http://localhost:3000/reservas/1
+```
+
+Evidências: [`evidencias/docker-build.txt`](evidencias/docker-build.txt),
+[`evidencias/compose-ps.txt`](evidencias/compose-ps.txt),
+[`evidencias/curl-local.txt`](evidencias/curl-local.txt).
 
 ## Como provisionar na AWS
 

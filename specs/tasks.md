@@ -64,11 +64,11 @@
 - **Merge:** `git merge --no-ff feat/docker`
 
 ### T4 — Docker Compose + smoke test
-- [ ] **Branch:** `feat/compose`
-- [ ] `docker-compose.yml` (db + api, volume `pgdata`, rede `technova-net`, healthchecks de ambos,
+- [x] **Branch:** `feat/compose`
+- [x] `docker-compose.yml` (db + api, volume `pgdata`, rede `technova-net`, healthchecks de ambos,
       `depends_on: service_healthy`)
-- [ ] `.env.example`
-- [ ] `scripts/smoke-test.sh BASE_URL`: health, POST 201, POST 400, GET lista, GET/:id 200,
+- [x] `.env.example`
+- [x] `scripts/smoke-test.sh BASE_URL`: health, POST 201, POST 400 (inclusive sem `Content-Type`), GET lista, GET/:id 200,
       GET `/abc` 404, GET id inexistente 404, PUT 200 (status mantido), PUT 400, DELETE 204, GET após DELETE 404
 - **Requisitos:** R3.2, R6 · **Design:** D4, D6
 - **Pronto quando:** `docker compose up -d` sobe os dois `healthy`; smoke test 100% ok;
@@ -122,6 +122,8 @@
 ### T9 — Apply, teste na AWS e destroy
 - [ ] `terraform apply` → aguardar o `user_data` (~3–5 min após a EC2 subir)
 - [ ] `scripts/smoke-test.sh http://<ip>:3000` (CRUD gravando no RDS)
+- [ ] Depois do smoke test (que apaga a reserva que cria), um `POST` que **fica gravado** +
+      `GET /reservas`, registrados em `curl-aws.txt` — prova do R7.5 (dados persistidos no RDS)
 - [ ] `aws rds describe-db-instances` (conferir `PubliclyAccessible=false`, `StorageEncrypted=true`)
 - [ ] Conferir o state no S3 (`aws s3 ls`) e o lock no DynamoDB
 - [ ] `terraform destroy` → confirmar zero recursos

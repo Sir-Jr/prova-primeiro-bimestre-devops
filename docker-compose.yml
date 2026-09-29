@@ -1,0 +1,57 @@
+# API de Reservas + PostgreSQL — ambiente local
+# Uso: cp .env.example .env (ajuste a senha) && docker compose up -d
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: technova-reservas-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-reservas}
+      POSTGRES_USER: ${POSTGRES_USER:-technova}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - technova-net
+    # Sem "ports": o banco só é acessível pela rede interna (a API é a única cliente)
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build: ./app
+    image: technova-reservas:1.0
+    container_name: technova-reservas-api
+    environment:
+      PORT: 3000
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB:-reservas}
+      DB_USER: ${POSTGRES_USER:-technova}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}
+      DB_SSL: "false"
+    ports:
+      - "${API_PORT:-3000}:3000"
+    networks:
+      - technova-net
+    depends_on:
+      db:
+        condition: service_healthy
+    # Declarado aqui (R3.2): o /health define o estado healthy do serviço no Compose
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+networks:
+  technova-net:
+    driver: bridge
+
+volumes:
+  pgdata:
