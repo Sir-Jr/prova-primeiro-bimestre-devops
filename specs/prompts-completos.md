@@ -477,6 +477,11 @@ _Parecer da IA-revisora, colado pelo usuário:_
 >
 > Pareceres emitidos desde o último confirmado: V04.
 
+### P34 — 29/09/2026 20:01 · Registro de prompts — export da IA-revisora R01–R29
+
+> prompts-revisora.md atualizado: R01–R29 (29/09, até 20:00 BRT).
+> Substituir a seção inteira da revisora no prompts-completos.md.
+
 ## Prompts do usuário para a IA-revisora
 
 
@@ -940,3 +945,191 @@ _Texto literal das mensagens do usuário no painel da IA-revisora, em ordem. Hor
 > Depois vem o merge --no-ff feat/compose.
 >
 > ⚠️ A próxima tarefa, T5, precisa da sua autorização explícita: ela cria o repositório público Sir-Jr/prova-primeiro-bimestre-devops no GitHub e envia tudo (push --all). A partir daí o código fica público. Antes do push vou mostrar o git ls-files para você conferir que não há nada proibido. Na volta com o parecer da T4, diga também se autoriza a T5. Lembre ainda de reexportar o prompts-revisora.md.
+
+### R24 — 29/09/2026 19:22
+
+> eu pedi para a IA executadora salvar na memória o progresso: Salvei o progresso em prova-1bi-progresso.md e atualizei a linha correspondente no índice da memória.
+>
+> O arquivo é compartilhado com a IA-revisora. Os dois painéis leem a mesma pasta de memória, e ela também tinha escrito nele. Por isso o texto misturava instruções dos dois papéis. Uma linha dela dizia "sou o agente de decisão/revisão, não edito o repo", e numa sessão futura eu poderia ler isso como se fosse sobre mim e parar de executar.
+>
+> Reorganizei o arquivo sem apagar nada do que ela registrou:
+>
+> ┌───────────────────┬───────────────────────────────────────────────────────────────────────────┐
+> │       Seção       │                                 O que tem                                 │
+> ├───────────────────┼───────────────────────────────────────────────────────────────────────────┤
+> │ Comum: prazo,     │ PR só em 01/10, link do repositório, decisões de API, regra da ferramenta │
+> │ repo, decisões    │  de IA, fluxo de revisão, backend mantido até depois do PR                │
+> ├───────────────────┼───────────────────────────────────────────────────────────────────────────┤
+> │ Comum: estado das │ Tabela da T0 à T12 com os hashes dos commits. As tarefas T0 a T5 estão    │
+> │  tarefas          │ concluídas, a T6 está bloqueada pelas credenciais do Lab e as notas para  │
+> │                   │ a T9 estão incluídas                                                      │
+> ├───────────────────┼───────────────────────────────────────────────────────────────────────────┤
+> │ Reflexão do       │ O seu texto sobre os dois agentes, literal. Acrescentei o complemento que │
+> │ usuário           │  você mandou para a revisora no R11, sobre o custo em tokens do modelo    │
+> │                   │ dela                                                                      │
+> ├───────────────────┼───────────────────────────────────────────────────────────────────────────┤
+> │ Para a IA-autora  │ A minha rotina de fechamento de tarefa, como regenerar o registro de      │
+> │                   │ prompts e a regra de mascarar senha nas evidências                        │
+> ├───────────────────┼───────────────────────────────────────────────────────────────────────────┤
+> │ Para a            │ O papel dela (não executa nada, só dá parecer depois de verificar), a     │
+> │ IA-revisora       │ convenção do "2", o export de prompts e os erros que ela já reconheceu    │
+> └───────────────────┴───────────────────────────────────────────────────────────────────────────┘
+>
+> Também tirei uma nota que estava desatualizada: "coluna Revisão preenchida só pelo usuário". A prática que você aprovou é eu rascunhar o texto factual e você revisar.
+>
+> Vale avisar a revisora da reorganização, para ela saber que agora tem uma seção própria. Quando as credenciais do Lab estiverem atualizadas, começo a T6.
+
+### R25 — 29/09/2026 19:26
+
+> notas da outra IA:
+> Conferi e está confirmado. As linhas 97 e 98 da sua entrega da Aula 05 registram que o recurso fica tainted e que o contorno foi head-bucket, depois untaint, depois apply -refresh=false -target=…. Apliquei tudo antes de começar a T6:
+>
+> ┌───────────────────┬───────────────────────────────────────────────────────────────────────────┐
+> │       Onde        │                                O que mudou                                │
+> ├───────────────────┼───────────────────────────────────────────────────────────────────────────┤
+> │ specs/design.md   │ O contorno completo voltou em 5 passos: head-bucket, untaint, apply       │
+> │ 5.2               │ -refresh=false -target=…, conferência via aws s3api e destroy com plan    │
+> │                   │ -destroy -refresh=false                                                   │
+> ├───────────────────┼───────────────────────────────────────────────────────────────────────────┤
+> │ specs/tasks.md T6 │ O critério de pronto agora prevê o caso tainted com o untaint             │
+> ├───────────────────┼───────────────────────────────────────────────────────────────────────────┤
+> │ specs/prompts.md  │ De quem: IA-revisora. Quem detectou: IA-autora. Status: confirmado pela   │
+> │ E7                │ IA-revisora, com o parecer das ~18:12 que também não foi repassado, a     │
+> │                   │ mesma falha do E11. O untaint foi restaurado                              │
+> └───────────────────┴───────────────────────────────────────────────────────────────────────────┘
+>
+> Criei a branch feat/infra, e essas mudanças estão nela junto com a marcação da T5. Ainda sem commit: elas entram no commit docs: da T6.
+>
+> Com esta, já são duas falhas de repasse entre os painéis (E7 e E11). Sugiro pedir à revisora que termine cada parecer com uma linha do tipo "Pareceres emitidos desde o último repasse: …". Assim, se algum ficar para trás, ele aparece logo.
+
+### R26 — 29/09/2026 19:41
+
+> 2 - o lab da AWS deu falha por hora, enquanto isso solicitei que a executora adiantasse as próximas etapas: O código da T6 está pronto e validado sem a AWS, na branch feat/infra. Ainda sem commit. Último parecer recebido: V01.
+>
+> infra/backend/:
+>
+> ┌─────────────────────┬──────────────────────────────────────────────────────────────────────────┐
+> │       Arquivo       │                                 Conteúdo                                 │
+> ├─────────────────────┼──────────────────────────────────────────────────────────────────────────┤
+> │                     │ Terraform >= 1.5, provider AWS ~> 5.0 (instalou a v5.100.0, a mesma da   │
+> │ providers.tf        │ Aula 05) e default_tags: Project, Environment=prova, ManagedBy,          │
+> │                     │ Owner=6325269, Purpose                                                   │
+> ├─────────────────────┼──────────────────────────────────────────────────────────────────────────┤
+> │ variables.tf        │ A região tem uma validation que só aceita us-east-1 (C1). Bucket         │
+> │                     │ technova-reservas-tfstate-6325269 e tabela technova-reservas-tf-lock     │
+> ├─────────────────────┼──────────────────────────────────────────────────────────────────────────┤
+> │ main.tf             │ Bucket S3, versionamento Enabled, SSE AES256, os 4 bloqueios de acesso   │
+> │                     │ público e DynamoDB LockID (S) PAY_PER_REQUEST                            │
+> ├─────────────────────┼──────────────────────────────────────────────────────────────────────────┤
+> │ outputs.tf          │ Nome e ARN do bucket, nome da tabela                                     │
+> ├─────────────────────┼──────────────────────────────────────────────────────────────────────────┤
+> │ .terraform.lock.hcl │ Versionado, fixa o provider em v5.100.0                                  │
+> └─────────────────────┴──────────────────────────────────────────────────────────────────────────┘
+>
+> Validação: terraform fmt -check ok, init -backend=false ok, validate com Success. O .terraform/ e o terraform.tfstate do backend estão ignorados.
+>
+> Dois pontos para a revisão:
+> 1. Criptografia AES256 (SSE-S3) em vez da aws:kms da Aula 05. Segui o design. As duas protegem o state em repouso, e a SSE-S3 é mais simples porque não depende de permissão em chave KMS dentro do Lab. Se preferir a aws:kms da Aula 05, é uma linha.
+> 2. Sem force_destroy no bucket. Com isso, o destroy falha enquanto houver versões do state no bucket, o que protege contra apagar sem querer. O custo é que a limpeza depois do PR exige esvaziar o bucket antes, e isso já está anotado na T11.
+>
+> O que fica para quando o Lab voltar:
+> 1. Atualizar as credenciais com o script e confirmar com aws sts.
+> 2. Rodar terraform plan e mostrar para você antes do apply.
+> 3. Rodar terraform apply. Se a SCP deixar o bucket tainted, aplico o contorno restaurado no D5.2.
+> 4. Conferir via aws s3api e aws dynamodb describe-table.
+>
+> Commits propostos: o código agora, depois da revisão, como feat: adiciona backend S3 e DynamoDB para remote state. A evidência do apply fica para depois, num docs: com a spec.
+>
+> Enquanto o Lab estiver fora, também dá para adiantar o código da T7 (os módulos) e da T8 (composição + validate) sem AWS. Só o plan depende do Lab.
+
+### R27 — 29/09/2026 19:47
+
+> 2 - A T7 está pronta para revisão, na branch feat/infra. Ainda sem commit. Último parecer recebido: V02.
+>
+> infra/modules/: a cópia dos 4 módulos da Aula 06 foi conferida com diff e estava idêntica antes dos ajustes. O diff final contém só estes ajustes:
+>
+> Módulo: ec2
+> Ajuste: Nova variável iam_instance_profile, padrão null
+> Motivo: Receber o LabInstanceProfile já existente. O módulo não cria IAM (C3)
+> ────────────────────────────────────────
+> Módulo: ec2
+> Ajuste: key_name passa a ser opcional, padrão null
+> Motivo: No Lab o valor é vockey, mas o módulo não obriga
+> ────────────────────────────────────────
+> Módulo: ec2
+> Ajuste: user_data_replace_on_change = true
+> Motivo: Fora do design original. O cloud-init só roda no primeiro boot. Sem essa opção, uma correção
+> no user_data durante a T9 não teria efeito, porque a instância seria só atualizada, sem rodar o
+> script de novo
+> ────────────────────────────────────────
+> Módulo: rds
+> Ajuste: engine_version padrão "16"
+> Motivo: A mesma versão do Compose (decisão 4)
+> ────────────────────────────────────────
+> Módulo: rds
+> Ajuste: validation na senha: só letras e números, de 8 a 128 caracteres
+> Motivo: Fora do design original, mas o design já dizia "só alfanumérica". Agora uma senha inválida é
+> recusada já no plan, e não no meio do apply
+>
+> Validação: terraform fmt -check ok, validate com Success nos 4 módulos e nenhum aws_iam_* em infra/.
+>
+> Ajuste no registro de prompts: os comandos que você roda com ! passam a aparecer como "Comando executado pelo usuário no terminal", e as saídas desses comandos saem do registro, porque não são prompts. Ficou P01 a P31.
+>
+> Dois pontos para a revisão:
+> 1. Commits: proponho dois, em vez do único que o tasks.md prevê:
+>    - feat: reaproveita módulos vpc, security-group, ec2 e rds da Aula 06, com a cópia sem alteração
+>    - feat: adapta módulos ec2 e rds ao Learner Lab, com os 5 ajustes acima
+>
+>    Assim o histórico mostra o reaproveitamento e a evolução, o que ajuda na Questão 1, onde cada aula aparece na solução.
+> 2. Uma sugestão, não aplicada: forçar IMDSv2 na EC2 com metadata_options { http_tokens = "required" }. Isso protege as credenciais do LabInstanceProfile contra ataques de SSRF. A AMI Amazon Linux 2023 já vem com IMDSv2 por padrão, mas deixar explícito no código documenta a decisão. É uma linha. Aplico?
+>
+> Depois da revisão, sigo para o código da T8: providers.tf com o backend, variables.tf, main.tf, o template do user_data e outputs.tf, validado com init -backend=false.
+
+### R28 — 29/09/2026 19:56
+
+> 2 - O código da T8 está pronto e validado sem a AWS, na branch feat/infra. Ainda sem commit. Último parecer recebido: V03.
+>
+> Arquivos em infra/:
+>
+> ┌──────────────────────────────┬─────────────────────────────────────────────────────────────────┐
+> │           Arquivo            │                            Conteúdo                             │
+> ├──────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+> │                              │ backend "s3" com o bucket technova-reservas-tfstate-6325269, a  │
+> │ providers.tf                 │ chave prova/terraform.tfstate, encrypt = true e dynamodb_table. │
+> │                              │  Também tem as default_tags                                     │
+> ├──────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+> │                              │ A região só aceita us-east-1. O ssh_allowed_cidr não tem padrão │
+> │ variables.tf                 │  e só aceita /32. A db_password é sensitive e sem padrão. O     │
+> │                              │ LabInstanceProfile e a chave vockey são padrões. Também estão   │
+> │                              │ aqui o repo_url e a branch                                      │
+> ├──────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+> │                              │ AMI AL2023 buscada por filtro, e a composição vpc → sg_ec2 →    │
+> │ main.tf                      │ sg_rds → rds → ec2. O user_data recebe module.rds.db_address,   │
+> │                              │ então o RDS é criado antes da EC2                               │
+> ├──────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+> │                              │ Instala Docker e Git, baixa o CA bundle do RDS, clona o         │
+> │ templates/user_data.sh.tftpl │ repositório e faz o build. As variáveis vão para um api.env com │
+> │                              │  modo 600, e o container sobe com --env-file. Não usa set -x    │
+> ├──────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+> │ outputs.tf                   │ ec2_public_ip, rds_endpoint, api_url, health_url, ssh_command   │
+> ├──────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+> │ terraform.tfvars.example     │ Placeholders para o IP /32 e a senha. O arquivo real fica fora  │
+> │                              │ do Git                                                          │
+> └──────────────────────────────┴─────────────────────────────────────────────────────────────────┘
+>
+> Validação sem a AWS: fmt ok, validate com Success e nenhum aws_iam_*. Também renderizei o template e testei as validações (tabela acima).
+>
+> Registrei um erro meu (E14): o primeiro teste deu falso positivo, porque o bash -n passou num arquivo vazio. Refiz o teste do jeito certo. É um bom exemplo para a Questão 4: um teste que "passa" também precisa ser conferido.
+>
+> Três pontos para a revisão:
+> 1. Uma mudança em relação ao design: a senha vai por --env-file, num arquivo com modo 600, e não por -e DB_PASSWORD= no docker run. Com isso ela sai da lista de processos (ps). Ela ainda aparece no docker inspect, no user_data e no tfstate, que é o trade-off já registrado. Atualizei o design D5.6.
+> 2. Aviso esperado no init: no Terraform 1.16, o parâmetro dynamodb_table do backend S3 está deprecated em favor do use_lockfile, e vai aparecer um warning no init. Mantenho o dynamodb_table porque o enunciado exige DynamoDB para o locking. Vale citar na Questão 3.
+> 3. Commits propostos:
+>    - feat: adiciona composição dos módulos da infraestrutura: os arquivos de infra/, fora o backend e os módulos
+>    - docs: atualiza spec das tarefas T5 a T8: specs/, com a T5, o E7, a nota da T11, T7, T8, E14 e o prompts-completos.md regenerado
+>
+> O que não dá para testar sem o Lab: o user_data na EC2 real e a conexão TLS com o RDS. Isso fica para a T9. O plan passa pela revisora antes do apply, como ela pediu no V02.
+
+### R29 — 29/09/2026 20:00
+
+> 2 - faça um novo export do prompts-revisora.md
