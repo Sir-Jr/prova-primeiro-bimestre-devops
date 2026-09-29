@@ -53,11 +53,12 @@
 ## Fase C — Containers
 
 ### T3 — Dockerfile multi-stage
-- [ ] **Branch:** `feat/docker`
-- [ ] `app/Dockerfile` (estágios `deps` e `runtime`, `USER node`, `HEALTHCHECK`)
-- [ ] `app/.dockerignore`
+- [x] **Branch:** `feat/docker`
+- [x] `app/Dockerfile` (estágios `deps` e `runtime`, `USER node`, `HEALTHCHECK`)
+- [x] `app/.dockerignore`
 - **Requisitos:** R5.1, R5.2 · **Design:** D3
-- **Pronto quando:** `docker build` ok; `docker run` responde `/health`; `docker exec <c> whoami` = `node`
+- **Pronto quando:** `docker build` ok; `docker run` responde `/health`; `docker exec <c> whoami` = `node`;
+  arquivos de `/app` com dono `root` (o processo não reescreve o próprio código)
 - **Evidência:** `evidencias/docker-build.txt` (build + run + whoami + tamanho da imagem)
 - **Commit:** `feat: adiciona Dockerfile multi-stage da API`
 - **Merge:** `git merge --no-ff feat/docker`

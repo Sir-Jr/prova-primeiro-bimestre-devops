@@ -241,6 +241,36 @@ _Parecer da IA-revisora, colado pelo usuário:_
 > T2: commits 1–3 conferidos (f81cc10, 36427eb, b22a847), specs/ fora
 > deles. Commit 4 (docs:) e merge --no-ff feat/api: aprovados.
 
+### P22 — 29/09/2026 19:08 · T3 — Dockerfile
+
+> resposta da revisora:
+
+_Parecer da IA-revisora, colado pelo usuário:_
+
+> Revisão da T3 (Dockerfile, branch feat/docker): APROVADA com 2 ajustes.
+>
+> Ponto 1 (tamanho 244 MB × 62 MB): aprovado registrar os dois números
+> sem conclusão além da diferença de contagem do image store.
+>
+> Ponto 2 (dono dos arquivos): ENDURECER.
+> - Tirar o --chown=node:node das 3 linhas COPY. O código fica com dono
+>   root e modo 644/755 (leitura para o node), e o processo continua
+>   rodando como USER node. Se a API for comprometida, ela não consegue
+>   reescrever o próprio código. A API não grava em disco, então nada
+>   quebra.
+> - Atualizar o design (seção 3) com o motivo e refazer a parte de
+>   execução da evidência: o "ls -la /app" deve mostrar root:root e
+>   o whoami continua node. Bom exemplo de menor privilégio para a
+>   Questão 4, junto com os SGs.
+>
+> Ponto 3 (dois commits, feat: + docs:, depois merge --no-ff): aprovado.
+>
+> Ajuste de evidência:
+> - A linha do docker run mostra DB_PASSWORD=***, mas o arquivo não diz
+>   que a senha foi mascarada, e parece que o comando rodou assim.
+>   Acrescentar no cabeçalho: "# DB_PASSWORD substituída por *** nesta
+>   evidência; a senha real não é registrada."
+
 ## Prompts do usuário para a IA-revisora
 
 

@@ -1,0 +1,141 @@
+# Evidência — Docker (T3) — 29/09/2026 19:09 BRT
+# Docker 29.5.3
+# DB_PASSWORD substituída por *** nesta evidência; a senha real não é registrada.
+# Tamanho: 'docker image ls' e 'docker image inspect' contam de forma diferente no image store
+# do Docker 29 (containerd); os dois números estão registrados abaixo.
+
+$ docker build --no-cache --progress=plain -t technova-reservas:1.0 app
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.02kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:22-alpine
+#2 DONE 2.7s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 126B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 296B done
+#4 DONE 0.0s
+
+#5 [deps 1/4] FROM docker.io/library/node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402
+#5 DONE 0.0s
+
+#6 [deps 2/4] WORKDIR /app
+#6 CACHED
+
+#7 [deps 3/4] COPY package.json package-lock.json ./
+#7 DONE 0.0s
+
+#8 [deps 4/4] RUN npm ci --omit=dev && npm cache clean --force
+#8 1.359 
+#8 1.359 added 82 packages, and audited 83 packages in 1s
+#8 1.359 
+#8 1.359 16 packages are looking for funding
+#8 1.359   run `npm fund` for details
+#8 1.360 
+#8 1.360 found 0 vulnerabilities
+#8 1.361 npm notice
+#8 1.361 npm notice New major version of npm available! 10.9.9 -> 12.1.0
+#8 1.361 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.1.0
+#8 1.361 npm notice To update run: npm install -g npm@12.1.0
+#8 1.361 npm notice
+#8 1.476 npm warn using --force Recommended protections disabled.
+#8 DONE 1.7s
+
+#9 [runtime 3/5] COPY --from=deps /app/node_modules ./node_modules
+#9 DONE 0.1s
+
+#10 [runtime 4/5] COPY package.json ./
+#10 DONE 0.1s
+
+#11 [runtime 5/5] COPY src ./src
+#11 DONE 0.0s
+
+#12 exporting to image
+#12 exporting layers 0.1s done
+#12 exporting manifest sha256:a29ab210e8f8f1bc2d83246e2476f72ca02f88073d93766c57b8d47535f7b9c1 done
+#12 exporting config sha256:b162a5014d2e8da5318a868fb0c6f13381b07887eaffc686c6ea6926c747b7f7 done
+#12 exporting attestation manifest sha256:c95e101ca225927762d018fa1cf5b90c66f94f9cf448aeaaf72b27368c0c6546 0.0s done
+#12 exporting manifest list sha256:3211d7c762c416fe21aea6b6d3b3a7c7fc5e71419d61e10091c92528023ffaf9 done
+#12 naming to docker.io/library/technova-reservas:1.0 done
+#12 unpacking to docker.io/library/technova-reservas:1.0 0.1s done
+#12 DONE 0.3s
+
+$ docker image ls technova-reservas:1.0
+REPOSITORY          TAG       IMAGE ID       SIZE
+technova-reservas   1.0       3211d7c762c4   244MB
+
+$ docker image inspect technova-reservas:1.0 --format "{{.Size}}"
+61514301 bytes (~62 MB)
+
+$ docker history technova-reservas:1.0 (camadas da imagem final — sem o estágio deps)
+CREATED BY                                      SIZE
+CMD ["node" "src/server.js"]                    0B
+HEALTHCHECK {Test:[CMD-SHELL wget -qO- http:…   0B
+EXPOSE [3000/tcp]                               0B
+USER node                                       0B
+COPY src ./src # buildkit                       36.9kB
+COPY package.json ./ # buildkit                 12.3kB
+COPY /app/node_modules ./node_modules # buil…   5.63MB
+WORKDIR /app                                    8.19kB
+ENV NODE_ENV=production PORT=3000               0B
+CMD ["node"]                                    0B
+ENTRYPOINT ["docker-entrypoint.sh"]             0B
+
+$ docker run -d --name api-t3 --network t3-net -p 3000:3000 -e DB_HOST=pg-t3 -e DB_NAME=reservas -e DB_USER=technova -e DB_PASSWORD=*** -e DB_SSL=false technova-reservas:1.0
+256e1b268e98
+
+$ docker logs api-t3
+Banco pronto: tabela reservas verificada
+API de Reservas ouvindo na porta 3000
+
+$ curl -s http://localhost:3000/health
+{"status":"ok"}
+
+$ curl -s -X POST http://localhost:3000/reservas -H "Content-Type: application/json" -d '{"cliente":"Ana Souza","data":"2026-10-01"}'
+{"id":1,"cliente":"Ana Souza","data":"2026-10-01","status":"pendente","criado_em":"2026-09-29T22:09:15.966Z"}
+
+$ docker exec api-t3 whoami
+node
+
+$ docker exec api-t3 id
+uid=1000(node) gid=1000(node) groups=1000(node)
+
+$ docker inspect -f "{{.Config.User}} | health={{.State.Health.Status}}" api-t3
+node | health=healthy
+
+$ docker ps --filter name=api-t3
+NAMES     IMAGE                   STATUS                   PORTS
+api-t3    technova-reservas:1.0   Up 5 seconds (healthy)   0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+
+$ docker exec api-t3 ls -la /app /app/src
+/app:
+total 20
+drwxr-xr-x    1 root     root          4096 Sep 29 22:09 .
+drwxr-xr-x    1 root     root          4096 Sep 29 22:09 ..
+drwxr-xr-x   84 root     root          4096 Sep 29 22:09 node_modules
+-rw-r--r--    1 root     root           420 Sep 29 22:05 package.json
+drwxr-xr-x    3 root     root          4096 Sep 29 22:05 src
+
+/app/src:
+total 28
+drwxr-xr-x    3 root     root          4096 Sep 29 22:05 .
+drwxr-xr-x    1 root     root          4096 Sep 29 22:09 ..
+-rw-r--r--    1 root     root           999 Sep 29 22:05 app.js
+-rw-r--r--    1 root     root          2234 Sep 29 22:05 db.js
+drwxr-xr-x    2 root     root          4096 Sep 29 22:05 routes
+-rw-r--r--    1 root     root           730 Sep 29 22:05 server.js
+-rw-r--r--    1 root     root          2164 Sep 29 22:05 validation.js
+
+# O processo (node) não consegue alterar o próprio código:
+$ docker exec api-t3 sh -c "echo x >> /app/src/app.js"
+sh: can't create /app/src/app.js: Permission denied
+exit code: 1
+$ docker exec api-t3 touch /app/novo.js
+touch: /app/novo.js: Permission denied
+exit code: 1
