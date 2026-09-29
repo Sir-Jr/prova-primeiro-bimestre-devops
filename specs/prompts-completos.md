@@ -228,7 +228,7 @@ _Parecer da IA-revisora, colado pelo usuário:_
 > Commits 1 a 4 + merge --no-ff: APROVADOS. Pode fechar a T2 depois de
 > substituir a seção da revisora pelo prompts-revisora.md (R01–R20).
 
-### P21 — 29/09/2026 19:05 · T2 — prompts-revisora.md (R01–R21); commit 4 e merge aprovados
+### P21 — 29/09/2026 19:05 · T2 — prompts-revisora.md (R01–R21); commit 4 e merge aprovados → T3 — Dockerfile
 
 _Parecer da IA-revisora, colado pelo usuário:_
 
@@ -241,7 +241,7 @@ _Parecer da IA-revisora, colado pelo usuário:_
 > T2: commits 1–3 conferidos (f81cc10, 36427eb, b22a847), specs/ fora
 > deles. Commit 4 (docs:) e merge --no-ff feat/api: aprovados.
 
-### P22 — 29/09/2026 19:08 · T3 — Dockerfile
+### P22 — 29/09/2026 19:08 · T3 — revisão (endurecer a imagem; aviso de senha mascarada) → T4
 
 > resposta da revisora:
 
@@ -270,6 +270,36 @@ _Parecer da IA-revisora, colado pelo usuário:_
 >   que a senha foi mascarada, e parece que o comando rodou assim.
 >   Acrescentar no cabeçalho: "# DB_PASSWORD substituída por *** nesta
 >   evidência; a senha real não é registrada."
+
+### P23 — 29/09/2026 19:15 · T4 — revisão (timeout no smoke test; nota para a T9)
+
+> resposta da revisora, veja se faz sentido:
+
+_Parecer da IA-revisora, colado pelo usuário:_
+
+> Revisão da T4 (Compose, branch feat/compose): APROVADA com 1 ajuste.
+>
+> docker-compose.yml: aprovado como está (volume pgdata, rede bridge,
+> healthcheck do db e da api, depends_on service_healthy, banco sem porta
+> no host, senha obrigatória com :?). .env ignorado (conferido com
+> git check-ignore); senha real ausente de evidencias/, README, specs/,
+> scripts/ e .env.example (conferido).
+> E13: de acordo.
+> Commits 1–3 + merge --no-ff: aprovados.
+>
+> Ajuste obrigatório (scripts/smoke-test.sh):
+> - curl sem timeout. Na AWS, se a EC2 ainda não subiu a API ou o SG
+>   estiver errado, cada caso pode travar por minutos. Acrescentar
+>   --connect-timeout 5 --max-time 15 no curl da função checa. Falha de
+>   conexão já vira status 000 e conta como FALHA.
+>
+> Anotar para a T9 (não mexer agora):
+> - O smoke test apaga a reserva que cria, então no fim o RDS fica vazio.
+>   Para provar o R7.5 (dados gravados no RDS), depois do smoke test na
+>   AWS fazer um POST que fica gravado + GET /reservas, e registrar em
+>   curl-aws.txt.
+>
+> prompts-revisora.md atualizado: R01–R23, mesmo caminho.
 
 ## Prompts do usuário para a IA-revisora
 
@@ -648,3 +678,89 @@ _Texto literal das mensagens do usuário no painel da IA-revisora, em ordem. Hor
 > 2. Numeração: o parecer anterior dizia R01 a R17, e este diz R01 a R20. Confira com a revisora qual é o certo. Imagino que seja R20, porque você mandou mais prompts para ela depois, mas vou usar o que vier no arquivo.
 >
 > Quando o arquivo chegar, faço o commit docs: adiciona registro completo de prompts e atualiza spec da T2 e o merge --no-ff feat/api, e sigo para a T3 (Dockerfile)
+
+### R22 — 29/09/2026 19:07
+
+> 2 -A T3 está pronta para revisão, na branch feat/docker. Ainda sem commits.
+>
+> app/Dockerfile, multi-stage:
+>
+> ┌─────────────────────┬─────────────────────────────────────────────────────────────────────────┐
+> │       Estágio       │                                O que faz                                │
+> ├─────────────────────┼─────────────────────────────────────────────────────────────────────────┤
+> │ deps                │ Copia só o package*.json e roda npm ci --omit=dev. Essa camada fica em  │
+> │ (node:22-alpine)    │ cache enquanto as dependências não mudam                                │
+> ├─────────────────────┼─────────────────────────────────────────────────────────────────────────┤
+> │ runtime             │ Leva só o node_modules de produção e o src/, com --chown=node:node,     │
+> │ (node:22-alpine)    │ USER node, EXPOSE 3000, HEALTHCHECK com wget em /health e CMD ["node",  │
+> │                     │ "src/server.js"]                                                        │
+> └─────────────────────┴─────────────────────────────────────────────────────────────────────────┘
+>
+> app/.dockerignore: node_modules, .env*, .git, o próprio Dockerfile e *.md.
+>
+> Resultado, salvo em evidencias/docker-build.txt (116 linhas):
+> - Build sem cache: ok.
+> - Imagem: technova-reservas:1.0.
+> - Execução: o container ligado a um Postgres responde /health com 200, e um POST cria a reserva com 201.
+> - Usuário: whoami → node, id → uid 1000, Config.User = node.
+> - Healthcheck: docker ps mostra Up (healthy).
+> - Senha: mascarada como *** no comando registrado. Conferi, e ela não aparece nenhuma vez no arquivo.
+>
+> Três pontos para a revisão:
+> 1. Tamanho da imagem: o docker image ls mostra 244 MB, e o inspect mostra 62 MB. A diferença vem do image store do Docker 29 (containerd), que conta de forma diferente o espaço em disco descompactado e o conteúdo. Deixo os dois números registrados no relatório, sem tirar conclusão além disso.
+> 2. Dono dos arquivos: o --chown=node:node deixa o processo dono do próprio código. É o padrão comum, mas numa versão mais rígida o código fica com dono root, só leitura para o node, e o processo não consegue alterar os próprios arquivos se for comprometido. A API não grava nada em disco, então as duas opções funcionam. Mantenho a do design ou endureço?
+> 3. Commits: o tasks.md previa um commit só. Proponho dois, seguindo a regra de manter specs/ separado:
+>    - feat: adiciona Dockerfile multi-stage da API: Dockerfile e .dockerignore
+>    - docs: adiciona evidência do Docker e atualiza spec da T3: evidencias/docker-build.txt, tasks.md, prompts.md e prompts-completos.md regenerado
+>
+>    Depois vem o merge --no-ff feat/docker.
+>
+> Pode levar para a IA-revisora. Para o registro dela ficar completo, lembre de reexportar o prompts-revisora.md quando for fechar a tarefa.
+
+### R23 — 29/09/2026 19:14
+
+> 2 - A T4 está pronta para revisão, na branch feat/compose. Ainda sem commits.
+>
+> docker-compose.yml:
+>
+> ┌───────────────────────────────────┬───────────────────────────────────────────────────────────┐
+> │             Requisito             │                        Como ficou                         │
+> ├───────────────────────────────────┼───────────────────────────────────────────────────────────┤
+> │ API + PostgreSQL com um comando   │ docker compose up -d                                      │
+> ├───────────────────────────────────┼───────────────────────────────────────────────────────────┤
+> │ Volume nomeado                    │ pgdata, e a persistência foi testada (abaixo)             │
+> ├───────────────────────────────────┼───────────────────────────────────────────────────────────┤
+> │ Rede bridge customizada           │ technova-net, driver: bridge                              │
+> ├───────────────────────────────────┼───────────────────────────────────────────────────────────┤
+> │ Healthcheck no banco              │ pg_isready, a cada 5 s, até 10 tentativas                 │
+> ├───────────────────────────────────┼───────────────────────────────────────────────────────────┤
+> │ Healthcheck da API explícito      │ wget em /health                                           │
+> │ (R3.2)                            │                                                           │
+> ├───────────────────────────────────┼───────────────────────────────────────────────────────────┤
+> │ depends_on com condição           │ condition: service_healthy                                │
+> ├───────────────────────────────────┼───────────────────────────────────────────────────────────┤
+> │ .env.example versionado, .env     │ ✅ O .env local tem uma senha aleatória e não aparece no  │
+> │ ignorado                          │ git status                                                │
+> └───────────────────────────────────┴───────────────────────────────────────────────────────────┘
+>
+> Dois pontos a mais:
+> - Banco sem porta publicada no host: só a API acessa o Postgres, pela rede interna.
+> - Senha obrigatória: com ${POSTGRES_PASSWORD:?}, o Compose recusa subir sem o .env e diz o motivo.
+>
+> Evidências:
+> - compose-ps.txt: os dois serviços (healthy), a rede com driver=bridge e o volume pgdata. Também registra o teste de persistência: criei uma reserva, rodei docker compose down, vi ps -a vazio, subi de novo, e a reserva voltou pela API e pelo psql.
+> - curl-local.txt: smoke test com 17 de 17 casos OK.
+> - Senha: conferi que o valor do .env não aparece em nenhum arquivo de evidencias/.
+>
+> scripts/smoke-test.sh: recebe a BASE_URL como argumento, e o mesmo script será usado na AWS. Ele sai com código 1 se qualquer caso falhar. O README ganhou a seção "Como rodar localmente".
+>
+> Registrei um erro meu (E13): na T2 eu disse que o smoke test cobriria o POST sem Content-Type, e a primeira versão não cobria. O caso já foi incluído. Também corrigi o alinhamento da saída com acentos.
+>
+> Commits planejados:
+> 1. feat: adiciona docker-compose com API e PostgreSQL: docker-compose.yml e .env.example
+> 2. chore: adiciona script de smoke test da API: scripts/smoke-test.sh
+> 3. docs: adiciona evidências do ambiente local e atualiza spec da T4: evidencias/compose-ps.txt, evidencias/curl-local.txt, README.md e specs/
+>
+> Depois vem o merge --no-ff feat/compose.
+>
+> ⚠️ A próxima tarefa, T5, precisa da sua autorização explícita: ela cria o repositório público Sir-Jr/prova-primeiro-bimestre-devops no GitHub e envia tudo (push --all). A partir daí o código fica público. Antes do push vou mostrar o git ls-files para você conferir que não há nada proibido. Na volta com o parecer da T4, diga também se autoriza a T5. Lembre ainda de reexportar o prompts-revisora.md.

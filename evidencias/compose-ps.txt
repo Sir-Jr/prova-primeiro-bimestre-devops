@@ -1,0 +1,67 @@
+# Evidência — Docker Compose (T4) — 29/09/2026 19:11 BRT
+# Docker Compose version v5.1.4
+# A senha do banco vem do .env local (não versionado); nenhum valor de senha é registrado aqui.
+
+$ docker compose ps
+NAME                    IMAGE                   COMMAND                  SERVICE   CREATED          STATUS                    PORTS
+technova-reservas-api   technova-reservas:1.0   "docker-entrypoint.s…"   api       25 seconds ago   Up 20 seconds (healthy)   0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+technova-reservas-db    postgres:16-alpine      "docker-entrypoint.s…"   db        26 seconds ago   Up 25 seconds (healthy)   5432/tcp
+
+$ docker network inspect prova-primeiro-bimestre-devops_technova-net --format "{{.Name}} driver={{.Driver}}"
+prova-primeiro-bimestre-devops_technova-net driver=bridge
+
+$ docker volume ls --filter name=pgdata
+DRIVER    VOLUME NAME
+local     prova-primeiro-bimestre-devops_pgdata
+
+$ docker inspect -f "{{.Name}} health={{.State.Health.Status}}" technova-reservas-db technova-reservas-api
+/technova-reservas-db health=healthy
+/technova-reservas-api health=healthy
+
+# Persistência: cria uma reserva, derruba os containers (sem -v) e sobe de novo
+$ curl -s -X POST http://localhost:3000/reservas -H "Content-Type: application/json" -d '{"cliente":"Teste Persistência","data":"2026-10-01","status":"confirmada"}'
+{"id":2,"cliente":"Teste Persistência","data":"2026-10-01","status":"confirmada","criado_em":"2026-09-29T22:11:06.001Z"}
+
+$ docker compose down
+ Container technova-reservas-api Stopping 
+ Container technova-reservas-api Stopped 
+ Container technova-reservas-api Removing 
+ Container technova-reservas-api Removed 
+ Container technova-reservas-db Stopping 
+ Container technova-reservas-db Stopped 
+ Container technova-reservas-db Removing 
+ Container technova-reservas-db Removed 
+ Network prova-primeiro-bimestre-devops_technova-net Removing 
+ Network prova-primeiro-bimestre-devops_technova-net Removed 
+
+$ docker compose ps -a
+NAME      IMAGE     COMMAND   SERVICE   CREATED   STATUS    PORTS
+
+$ docker compose up -d
+ Network prova-primeiro-bimestre-devops_technova-net Creating 
+ Network prova-primeiro-bimestre-devops_technova-net Created 
+ Container technova-reservas-db Creating 
+ Container technova-reservas-db Created 
+ Container technova-reservas-api Creating 
+ Container technova-reservas-api Created 
+ Container technova-reservas-db Starting 
+ Container technova-reservas-db Started 
+ Container technova-reservas-db Waiting 
+ Container technova-reservas-db Healthy 
+ Container technova-reservas-api Starting 
+ Container technova-reservas-api Started 
+
+$ docker compose ps
+NAME                    IMAGE                   COMMAND                  SERVICE   CREATED          STATUS                    PORTS
+technova-reservas-api   technova-reservas:1.0   "docker-entrypoint.s…"   api       12 seconds ago   Up 6 seconds (healthy)    0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+technova-reservas-db    postgres:16-alpine      "docker-entrypoint.s…"   db        12 seconds ago   Up 12 seconds (healthy)   5432/tcp
+
+$ curl -s http://localhost:3000/reservas/2
+{"id":2,"cliente":"Teste Persistência","data":"2026-10-01","status":"confirmada","criado_em":"2026-09-29T22:11:06.001Z"}
+
+$ docker compose exec db psql -U technova -d reservas -c "SELECT id, cliente, data, status FROM reservas;"
+ id |      cliente       |    data    |   status   
+----+--------------------+------------+------------
+  2 | Teste Persistência | 2026-10-01 | confirmada
+(1 row)
+
