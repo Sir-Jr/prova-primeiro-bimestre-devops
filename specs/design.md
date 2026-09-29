@@ -142,9 +142,12 @@ Exemplo de reserva: `{ "id": 1, "cliente": "Ana Souza", "data": "2026-10-01", "s
 | Estágio | Base | Faz |
 |---------|------|-----|
 | `deps` | `node:22-alpine` | copia `package*.json`, roda `npm ci --omit=dev` |
-| `runtime` | `node:22-alpine` | `NODE_ENV=production`, copia `node_modules` do `deps` + `src/`, `USER node`, `EXPOSE 3000`, `HEALTHCHECK` com `wget` em `/health`, `CMD ["node", "src/server.js"]` |
+| `runtime` | `node:22-alpine` | `NODE_ENV=production`, copia `node_modules` do `deps` + `src/` (dono `root`), `USER node`, `EXPOSE 3000`, `HEALTHCHECK` com `wget` em `/health`, `CMD ["node", "src/server.js"]` |
 
-- Arquivos copiados com `--chown=node:node`; processo roda como `node` (não-root).
+- Processo roda como `node` (não-root), mas os arquivos da aplicação ficam com **dono `root`** e
+  modo 644/755 (sem `--chown`): o `node` só lê. Se a API for comprometida, ela não consegue reescrever
+  o próprio código. A API não grava em disco, então nada depende de escrita em `/app`. Mesmo princípio
+  de menor privilégio dos Security Groups (D5.5).
 - **`app/.dockerignore`**: `node_modules`, `npm-debug.log`, `.env`, `.git`, `Dockerfile`, `.dockerignore`.
 
 ## 4. Docker Compose (R6)
