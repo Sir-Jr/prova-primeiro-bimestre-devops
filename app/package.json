@@ -1,0 +1,19 @@
+{
+  "name": "technova-reservas-api",
+  "version": "1.0.0",
+  "description": "API de Reservas da TechNova — CRUD de reservas com PostgreSQL",
+  "main": "src/server.js",
+  "private": true,
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "author": "Sirlande Martins (RA: 6325269)",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.22.3",
+    "pg": "^8.23.0"
+  }
+}

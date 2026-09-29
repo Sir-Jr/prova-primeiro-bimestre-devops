@@ -16,8 +16,9 @@
 - [x] `specs/design.md` + `specs/prompts.md` → `docs: adiciona design da spec da API de Reservas` (`aed04ad`)
 - [x] `specs/tasks.md` + `specs/prompts.md` → `docs: adiciona tarefas da spec da API de Reservas`
 - **Requisitos:** R9.1, R9.2
-- **Manutenção:** ao fim de cada tarefa, marcar o checkbox aqui e registrar o prompt em
-  `specs/prompts.md`, no mesmo commit da tarefa
+- **Manutenção:** ao fim de cada tarefa, marcar o checkbox aqui, registrar o prompt em
+  `specs/prompts.md` e regenerar `specs/prompts-completos.md` num commit `docs:` **separado**
+  dos commits de código, antes do merge da branch
 
 ## Fase A — Fundação
 
@@ -34,14 +35,14 @@
 ## Fase B — Aplicação
 
 ### T2 — API de Reservas (CRUD + /health)
-- [ ] **Branch:** `feat/api`
-- [ ] `app/package.json` (Express 4, `pg`; script `start`) + `package-lock.json`
-- [ ] `app/src/db.js`: Pool por variáveis de ambiente, SSL com CA quando `DB_SSL=true`,
+- [x] **Branch:** `feat/api`
+- [x] `app/package.json` (Express 4, `pg`; script `start`) + `package-lock.json`
+- [x] `app/src/db.js`: Pool por variáveis de ambiente, `pool.on('error')`, SSL com CA quando `DB_SSL=true`,
       `setTypeParser(1082)`, `initDb()` com `CREATE TABLE IF NOT EXISTS` e retry (10× / 3 s)
-- [ ] `app/src/validation.js`: `parseId()` e `validarReserva()`
-- [ ] `app/src/routes/reservas.js`: POST, GET, GET/:id, PUT (`COALESCE` no status), DELETE
-- [ ] `app/src/app.js`: `express.json()`, `/health`, rotas, 404 genérico, handler de erro (400 JSON malformado, 500 sem vazar detalhes)
-- [ ] `app/src/server.js`: `initDb()` → `listen(PORT)`
+- [x] `app/src/validation.js`: `parseId()` e `validarReserva()`
+- [x] `app/src/routes/reservas.js`: POST, GET, GET/:id, PUT (`COALESCE` no status), DELETE
+- [x] `app/src/app.js`: `express.json()`, `/health`, rotas, 404 genérico, handler de erro (400 JSON malformado, 500 sem vazar detalhes)
+- [x] `app/src/server.js`: `initDb()` → `listen(PORT)`
 - **Requisitos:** R1, R2, R3.1 · **Design:** D2
 - **Pronto quando:** `npm ci` sem erro; `node --check` em todos os arquivos; API sobe contra um
   Postgres temporário (`docker run postgres:16-alpine`) e responde aos casos do contrato D2.4
