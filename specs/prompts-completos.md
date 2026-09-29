@@ -482,6 +482,18 @@ _Parecer da IA-revisora, colado pelo usuário:_
 > prompts-revisora.md atualizado: R01–R29 (29/09, até 20:00 BRT).
 > Substituir a seção inteira da revisora no prompts-completos.md.
 
+### P35 — 29/09/2026 20:02 · Backup — push da feat/infra (sem merge, sem PR)
+
+> pode fazer o push da feat/infra como backup
+
+### P36 — 29/09/2026 20:03 · Memória — salvar o progresso
+
+> salve na memória o nosso progresso até aqui.
+
+### P37 — 29/09/2026 20:05 · Encerramento da sessão — conferência do que está salvo
+
+> sessão pronta para ser encerrada? os prompts estão salvos também?
+
 ## Prompts do usuário para a IA-revisora
 
 
