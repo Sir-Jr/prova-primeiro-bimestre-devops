@@ -214,9 +214,18 @@ backend "s3" {
 ```
 
 **Risco conhecido do Lab:** a SCP bloqueia `s3:GetBucketObjectLockConfiguration`, que o provider AWS
-chama ao ler o `aws_s3_bucket` (visto na Aula 05). Plano: se o refresh do bucket falhar pela SCP,
-usar `-refresh=false` e conferir o bucket via `aws s3api` (`head-bucket`, `get-bucket-versioning`,
-`get-bucket-encryption`, `get-public-access-block`). Documentar no relatório (Questão 3).
+chama ao ler o `aws_s3_bucket` (visto na Aula 05: o bucket é criado, a leitura logo depois falha com
+`AccessDenied` e o recurso fica **tainted**). Contorno que funcionou na Aula 05:
+
+1. `aws s3api head-bucket --bucket <nome>` — confirmar que o bucket existe de fato;
+2. `terraform untaint aws_s3_bucket.<nome>` — o recurso está bom, só a leitura falhou (sem isso o
+   próximo `apply` destruiria e recriaria o bucket);
+3. `terraform apply -refresh=false -target=` versioning, encryption e public access block (e a tabela
+   DynamoDB, se ainda faltar);
+4. conferir via `aws s3api get-bucket-versioning`, `get-bucket-encryption`, `get-public-access-block`;
+5. para destruir depois: `terraform plan -destroy -refresh=false -out=…` e `apply` desse plano.
+
+Documentar no relatório (Questão 3).
 
 ### 5.3 Parâmetros de rede
 
@@ -261,18 +270,26 @@ A variável `ssh_allowed_cidr` tem `validation` que **recusa `0.0.0.0/0`**.
 
 ### 5.6 EC2 (R7.3)
 
-- AMI Amazon Linux 2023 via `data "aws_ami"` (sempre a mais recente, sem ID fixo).
+- AMI Amazon Linux 2023 **padrão** via `data "aws_ami"` com filtro `al2023-ami-2023.*-x86_64` (sempre a
+  mais recente, sem ID fixo). O curinga `al2023-ami-*-x86_64` da Aula 06 também casaria com as
+  variantes `minimal` e `ecs`; o nome da AMI escolhida é conferido no `plan`.
 - `t2.micro`, `public_subnet_ids[0]`, `iam_instance_profile = "LabInstanceProfile"` (C3 — nenhum
   recurso IAM criado; o perfil já existe no Lab), `key_name = "vockey"` (key pair padrão do Lab).
 - Mudança no módulo `ec2` da Aula 06: nova variável `iam_instance_profile` (default `null`) e
   `key_name` passa a ser opcional.
+- `user_data_replace_on_change = true`: o cloud-init só roda no primeiro boot; sem isso, uma mudança
+  no `user_data` só atualizaria a instância, sem rodar o script de novo.
+- **IMDSv2 obrigatório** (`metadata_options { http_tokens = "required" }`): o metadata service só
+  responde com token de sessão, protegendo as credenciais do `LabInstanceProfile` contra SSRF.
 
 **`user_data.sh.tftpl`** (via `templatefile()`):
 1. `dnf install -y docker git` → `systemctl enable --now docker`
 2. `git clone` do repositório público `prova-primeiro-bimestre-devops`
 3. Baixa o CA bundle do RDS (`https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem`)
 4. `docker build -t technova-reservas ./app`
-5. `docker run -d --name api --restart unless-stopped -p 3000:3000 -e DB_HOST=... -e DB_SSL=true -e DB_SSL_CA=/certs/rds-global-bundle.pem -v /opt/certs:/certs:ro technova-reservas`
+5. Grava as variáveis do container em `/opt/technova/api.env` (modo 600, só root) e roda
+   `docker run -d --name api --restart unless-stopped -p 3000:3000 --env-file /opt/technova/api.env -v /opt/certs:/certs:ro technova-reservas:1.0`
+   — a senha não aparece na linha de comando do `docker` (`ps`)
 
 - Script com `set -euo pipefail` e **sem `set -x`**: o trace ecoaria cada comando — inclusive o
   `docker run -e DB_PASSWORD=...` — em `/var/log/cloud-init-output.log`.
@@ -288,7 +305,8 @@ A variável `ssh_allowed_cidr` tem `validation` que **recusa `0.0.0.0/0`**.
 - Módulo da Aula 06 com `engine_version = "16"` (mesma major do Compose): `db.t3.micro`, 20 GB gp2,
   `storage_encrypted = true`, `publicly_accessible = false`, subnet group com as privadas,
   `multi_az = false`, `skip_final_snapshot = true`, `deletion_protection = false`, `backup_retention_period = 0`.
-- `db_password` com `sensitive = true`, só alfanumérica (o RDS recusa `/`, `@`, `"` e espaço).
+- `db_password` com `sensitive = true`, só alfanumérica (o RDS recusa `/`, `@`, `"` e espaço), com
+  `validation` no módulo (`^[A-Za-z0-9]{8,128}$`): senha inválida é recusada no `plan`, não no meio do `apply`.
 
 ### 5.8 Tags e outputs (R7.7, R7.8)
 

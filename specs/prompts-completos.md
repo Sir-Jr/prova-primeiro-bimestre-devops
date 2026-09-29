@@ -301,6 +301,182 @@ _Parecer da IA-revisora, colado pelo usuário:_
 >
 > prompts-revisora.md atualizado: R01–R23, mesmo caminho.
 
+### P24 — 29/09/2026 19:17 · T5 — autorização para publicar o repositório (sem PR)
+
+> pode executar a T5, sem PR
+
+### P25 — 29/09/2026 19:20 · Memória — salvar o progresso
+
+> salve na memória o nosso progresso até aqui
+
+### P26 — 29/09/2026 19:23 · E7 — resolvido (parecer não repassado)
+
+_Parecer da IA-revisora, colado pelo usuário:_
+
+> E7: RESOLVIDO, erro da IA-revisora (parecer de 29/09 ~18:12 BRT, que
+> não chegou à IA-autora; mesma falha de repasse do E11).
+> - Fato: entregas/aula-05/6325269/entrega.md (l. 97-98) no repo da
+>   disciplina. Após a falha de leitura pela SCP o aws_s3_bucket fica
+>   tainted; o contorno que funcionou foi head-bucket → terraform untaint
+>   → apply -refresh=false -target=(versioning, encryption, public access
+>   block); destroy com plan -destroy -refresh=false.
+> - Antes de começar a T6: restaurar esse contorno no design 5.2 e no
+>   critério de pronto da T6, e atualizar a linha E7 do prompts.md
+>   (De quem = IA-revisora; Quem detectou = IA-autora; Status =
+>   confirmado, untaint restaurado).
+> - Memória compartilhada: já corrigi as duas linhas do E7.
+
+### P27 — 29/09/2026 19:25 · T6 — como atualizar as credenciais do Lab pelo terminal
+
+> como atualizar as credenciais por aqui peo terminal?
+
+### P28 — 29/09/2026 19:34 · T6 — atualização das credenciais (falhou: área de transferência sem o bloco)
+
+_Comando executado pelo usuário no terminal (`!`):_
+
+```
+bash /tmp/claude-1000/-home-sirla-faculdade-projeto-ale-devops-20262/4b563b39-3c3a-4e29-aa81-6513226b10d2/scratchpad/atualizar-credenciais-aws.sh
+```
+
+### P29 — 29/09/2026 19:36 · T6 — Lab com falha; parecer V01 (controle de repasse)
+
+> O laboratório deu falha, já reportei o problema para o professor, enquanto isso vou enviar a última nota da IA revisora:
+
+_Parecer da IA-revisora, colado pelo usuário:_
+
+> Parecer V01 — 19:27 BRT
+>
+> E7: correções conferidas no estado atual (design 5.2 l. 221, tasks.md
+> T6 l. 98, prompts.md E7). De acordo; entram no commit docs: da T6.
+>
+> Controle de repasse (a partir deste parecer):
+> - Todo parecer da IA-revisora começa com "Parecer Vnn — hh:mm BRT",
+>   com numeração contínua.
+> - Ao responder, a IA-autora informa o último Vnn que recebeu. Se
+>   houver buraco na numeração, o usuário repassa o que faltou.
+> - Os pareceres anteriores (sem número) já estão todos conciliados:
+>   E7 e E11 resolvidos, nenhum outro pendente.
+>
+> Pareceres emitidos desde o último confirmado: V01.
+
+### P30 — 29/09/2026 19:39 · T6 — seguir para a T7 depois da revisão
+
+> pode seguir para a T7 depois da revisão
+
+### P31 — 29/09/2026 19:42 · T6 — parecer V02 (backend aprovado) → T7
+
+> resposta da revisora:
+
+_Parecer da IA-revisora, colado pelo usuário:_
+
+> Parecer V02 — 19:43 BRT (último confirmado pela IA-autora: V01)
+>
+> Revisão da T6 — código do backend (branch feat/infra): APROVADA.
+>
+> Ponto 1 (AES256 em vez de aws:kms): mantido AES256, como no design.
+> Protege em repouso, sem depender de permissão KMS no Lab.
+> Ponto 2 (sem force_destroy): aprovado. Anotar na T11 que "aws s3 rm
+> --recursive" NÃO basta num bucket versionado: é preciso apagar todas
+> as versões e delete markers (aws s3api list-object-versions +
+> delete-objects) antes do destroy.
+>
+> Conferido: região travada em us-east-1 por validation; 4 bloqueios de
+> acesso público; DynamoDB LockID (S) PAY_PER_REQUEST; default_tags;
+> nenhum recurso IAM; .terraform/ ignorado; lock versionado.
+>
+> Observação (sem ação agora): o terraform.tfstate do backend é local e
+> só existe nesta máquina. Se ele se perder, a limpeza da T11 é manual
+> via CLI. Aceitável; citar na Questão 3.
+>
+> Commit "feat: adiciona backend S3 e DynamoDB para remote state":
+> aprovado agora. Evidência do apply em docs: depois, como proposto.
+> Adiantar o código da T7 e da T8 sem a AWS: aprovado. O plan e o apply
+> esperam o Lab, e o plan passa por mim antes do apply.
+>
+> Pareceres emitidos desde o último confirmado: V02.
+
+### P32 — 29/09/2026 19:48 · T7 — parecer V03 (módulos aprovados; IMDSv2) → T8
+
+> resposta da revisora:
+
+_Parecer da IA-revisora, colado pelo usuário:_
+
+> Parecer V03 — 19:49 BRT (último confirmado pela IA-autora: V02)
+>
+> Revisão da T7 — módulos (branch feat/infra): APROVADA com 1 acréscimo.
+>
+> Conferido por diff contra unifaat-devops-portfolio/aula-06/modules:
+> vpc e security-group idênticos; ec2 e rds só com os 5 ajustes
+> descritos. RDS mantém storage_encrypted = true, publicly_accessible =
+> false, subnet group próprio, senha sensitive; nenhum output expõe senha.
+>
+> Ajustes 1–5: aprovados, inclusive os 2 fora do design original:
+> - user_data_replace_on_change = true: correto (cloud-init só roda no
+>   1º boot). Registrar no design 5.6.
+> - validation da senha: correta; recusa no plan em vez de no apply.
+>   Registrar no design 5.7.
+>
+> Ponto 1 (dois commits, cópia literal + adaptação): aprovado. Deixa o
+> reaproveitamento da Aula 06 visível no histórico.
+>
+> Ponto 2 (IMDSv2): APLICAR, no módulo ec2:
+>   metadata_options {
+>     http_tokens   = "required"
+>     http_endpoint = "enabled"
+>   }
+> Protege as credenciais do LabInstanceProfile contra SSRF, fica
+> documentado no código e é um bom ponto para a Questão 4. Entra no 2º
+> commit ("adapta módulos ec2 e rds ao Learner Lab"). Registrar no
+> design 5.6.
+>
+> Registro de prompts (comandos "!" do usuário marcados como comando,
+> saídas fora): de acordo.
+>
+> Seguir para o código da T8: aprovado.
+>
+> Pareceres emitidos desde o último confirmado: V03.
+
+### P33 — 29/09/2026 19:57 · T8 — parecer V04 (composição aprovada; filtro da AMI)
+
+> resposta da revisora, com 1 ajuste obrigatório, veja se faz sentido:
+
+_Parecer da IA-revisora, colado pelo usuário:_
+
+> Parecer V04 — 19:58 BRT (último confirmado pela IA-autora: V03)
+>
+> Revisão da T8 — composição (branch feat/infra): APROVADA com 1 ajuste.
+>
+> Conferido: backend s3 com encrypt + dynamodb_table; região travada;
+> ssh_allowed_cidr sem default e só /32; db_password sensitive sem
+> default; composição vpc → sg_ec2 → sg_rds (5432 só do SG da EC2) →
+> rds (subnets privadas) → ec2 (db_address no user_data, dependência
+> implícita); IMDSv2 no módulo ec2 (e5be53c); nenhum aws_iam_*;
+> terraform.tfvars ignorado.
+>
+> Ajuste obrigatório (main.tf, data "aws_ami"):
+> - O filtro "al2023-ami-*-x86_64" também casa com as AMIs
+>   "al2023-ami-minimal-*". Com most_recent = true, a EC2 pode subir numa
+>   imagem mínima (sem SSM agent e com menos pacotes base), e o
+>   resultado muda conforme a data. Trocar por:
+>     values = ["al2023-ami-2023.*-x86_64"]
+>   e, no plan, conferir o nome da AMI escolhida.
+>
+> Ponto 1 (senha por --env-file com modo 600): aprovado. O install -m 600
+> antes do cat mantém a permissão; com a senha só alfanumérica, o
+> heredoc sem aspas é seguro. Trade-off (docker inspect, user_data,
+> tfstate) já registrado.
+> Ponto 2 (warning do dynamodb_table no Terraform 1.16): manter, porque o
+> enunciado exige DynamoDB. Citar na Questão 3 e guardar o warning na
+> evidência do init.
+> Ponto 3 (commits feat: + docs:): aprovados.
+> E14: de acordo.
+>
+> Para a T9 (sem ação agora): se a API não responder, o primeiro lugar
+> para olhar é /var/log/cloud-init-output.log via SSH, porque o set -e
+> encerra o user_data sem aviso externo.
+>
+> Pareceres emitidos desde o último confirmado: V04.
+
 ## Prompts do usuário para a IA-revisora
 
 
