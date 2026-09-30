@@ -11,6 +11,7 @@ ela é substituída por `***` e o cabeçalho do arquivo avisa.
 | [`docker-build.txt`](docker-build.txt) | Build da imagem, execução do container, `whoami` não-root e healthcheck |
 | [`compose-ps.txt`](compose-ps.txt) | `docker compose ps` com `api` e `db` saudáveis |
 | [`curl-local.txt`](curl-local.txt) | Smoke test das rotas no ambiente local |
+| [`terraform-backend.txt`](terraform-backend.txt) | Backend do remote state: `plan`, `apply`, contorno da SCP do Lab e conferência do bucket e da tabela (dados sensíveis mascarados) |
 
 ## Spec-Driven — [`specs/`](specs/)
 

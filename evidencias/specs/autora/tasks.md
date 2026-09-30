@@ -95,14 +95,19 @@
 ## Fase D — Infraestrutura
 
 ### T6 — Backend do remote state
-- [ ] **Branch:** `feat/infra`
-- [ ] `infra/backend/` (providers, main, variables, outputs): S3 + versioning + SSE + public access block + DynamoDB
-- [ ] Pré-requisito: credenciais do Learner Lab atualizadas (`aws sts get-caller-identity` ok)
+- [x] **Branch:** `feat/infra`
+- [x] `infra/backend/` (providers, main, variables, outputs): S3 + versioning + SSE + public access block + DynamoDB
+- [x] Pré-requisito: credenciais do Learner Lab atualizadas (`aws sts get-caller-identity` ok)
+- [x] `apply` em 30/09: a SCP barrou a leitura do Object Lock e o bucket ficou *tainted*, como previsto;
+  contorno do D5.2 aplicado (`head-bucket` → `untaint` → `plan -refresh=false -target=…` com 3 recursos,
+  sem recriar o bucket); conferência: versioning `Enabled`, SSE `AES256`, 4 bloqueios públicos `True`,
+  tabela `ACTIVE`
 - **Requisitos:** R8.1, R8.2, C1, C2 · **Design:** D5.2
 - **Pronto quando:** `apply` ok — ou, se a SCP barrar a leitura do bucket e ele ficar *tainted*,
   contornado com `head-bucket` → `terraform untaint` → `apply -refresh=false -target=…` (design D5.2);
   `aws s3api get-bucket-versioning` = `Enabled`, `get-bucket-encryption` = `AES256`; tabela `ACTIVE`
-- **Commit:** `feat: adiciona backend S3 e DynamoDB para remote state`
+- **Commit:** `feat: adiciona backend S3 e DynamoDB para remote state` (`6ce7937`)
+- **Evidência:** `evidencias/terraform-backend.txt` (dados sensíveis mascarados)
 
 ### T7 — Módulos (vpc, security-group, ec2, rds)
 - [x] Copiar os módulos da Aula 06 para `infra/modules/`

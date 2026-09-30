@@ -544,3 +544,78 @@ _Parecer da IA-revisora, colado pelo usuário:_
 > aprovado depois dos 2 ajustes.
 >
 > Pareceres emitidos desde o último confirmado: V05.
+
+### P42 — 30/09/2026 12:42 · Reorganização — commit e push aprovados
+
+> pode commitar e dar push
+
+### P43 — 30/09/2026 12:51 · T6 — atualização das credenciais do Lab
+
+_Comando executado pelo usuário no terminal (`!`):_
+
+```
+bash /home/sirla/faculdade/projeto_ale/.ferramentas-prova/atualizar-credenciais-aws.sh
+```
+
+### P44 — 30/09/2026 12:51 · T6 — interrupção antes do plan
+
+> stop
+
+### P45 — 30/09/2026 12:52 · T6 — credenciais do laboratório novo
+
+> só um momento, as credenciais estão válidas, mas eu não atualizei elas com o laboratório novo
+
+### P46 — 30/09/2026 12:53 · T6 — como passar o bloco de credenciais ao script
+
+> copiei o bloco, vou colar ele após o comando?
+
+### P47 — 30/09/2026 12:54 · T6 — atualização das credenciais do Lab (de novo)
+
+_Comando executado pelo usuário no terminal (`!`):_
+
+```
+bash /home/sirla/faculdade/projeto_ale/.ferramentas-prova/atualizar-credenciais-aws.sh
+```
+
+### P48 — 30/09/2026 12:56 · T6 — confirmação da chave; regra: nada sensível em evidencias/
+
+> começa com ASIA****, pode seguir com a T6, mensagens que mostram partes de credenciais ou dados sensíveis não podem ir para a pasta evidencias!
+
+### P49 — 30/09/2026 12:58 · T6 — apply do backend aprovado
+
+> pode aplicar
+
+### P50 — 30/09/2026 13:03 · T6 — parecer V06 (aprovada; E7 confirmado na execução; backup do state)
+
+> resposta da revisora:
+
+_Parecer da IA-revisora, colado pelo usuário:_
+
+> Parecer V06 — 13:02 BRT 30/09 (último confirmado pela IA-autora: V05)
+>
+> Revisão da T6 — apply do backend (staged, feat/infra): APROVADA.
+>
+> Conferido:
+> - evidencias/terraform-backend.txt: erro real da SCP (l. 161),
+>   untaint (l. 175) e conferências; conta, sessão, org e policy
+>   mascaradas, com aviso no cabeçalho.
+> - Varredura no staged e em git log -p --all: nenhuma chave ASIA/AKIA,
+>   secret, session token ou número de conta de 12 dígitos.
+> - Nenhum tfplan versionado (E17 sem consequência no repo); o
+>   terraform.tfstate do backend continua ignorado.
+> - V05 aplicado: nota de texto literal no prompts-revisora.md;
+>   spec-revisora.md sem /mnt/project-files; E16 registrado.
+>
+> E7: atualizar o status para "confirmado também na execução da T6
+> (tainted → untaint → plan -refresh=false com 3 a adicionar, 0 a
+> destruir)". O fato fecha a divergência.
+>
+> Recomendação (fora do repo): copiar infra/backend/terraform.tfstate
+> para um backup local fora do repositório. É a única cópia, e sem ela
+> a limpeza da T11 vira manual.
+>
+> Commit "docs: adiciona evidência do backend do remote state e atualiza
+> spec da T6": aprovado. Seguir para o init da T8; o plan passa por mim
+> antes do apply.
+>
+> Pareceres emitidos desde o último confirmado: V06.
