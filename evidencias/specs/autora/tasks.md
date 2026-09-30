@@ -168,10 +168,12 @@
 ## Fase E — Relatório e entrega
 
 ### T10 — Relatório
-- [ ] **Branch:** `docs/relatorio`
-- [ ] `relatorio.md`: ferramenta de IA no início; Questões 1–4, dissertativas, ≥ 10 linhas cada
-- [ ] Estrutura e fatos técnicos montados a partir das specs, do `prompts.md` e das evidências;
-      **reflexões e opiniões fornecidas pelo usuário** (apenas revisão de redação)
+- [x] **Branch:** `docs/relatorio`
+- [x] `relatorio.md`: ferramenta de IA no início; Questões 1–4, dissertativas, ≥ 10 linhas cada
+      (Q1 25, Q2 33, Q3 48, Q4 32 linhas de texto)
+- [x] Estrutura e fatos técnicos montados a partir das specs, do `prompts.md` e das evidências;
+      **reflexões e opiniões fornecidas pelo usuário** (apenas revisão de redação) — 7 trechos do usuário
+      (ferramenta; Q1 ordem; Q2 dois agentes e comparação com o manual; Q3 Lab; Q4 sem revisão e evolução)
 - **Requisitos:** R10 · **Design:** D8
 - **Pronto quando:** as 4 questões respondidas com a experiência real; revisão do usuário
 - **Commit:** `docs: adiciona relatório do processo`

@@ -823,3 +823,104 @@ _Parecer da IA-revisora, colado pelo usuário:_
 > a IA-autora monta estrutura e fatos e para para pedir o texto dele.
 >
 > Pareceres emitidos desde o último confirmado: V08.
+
+### P84 — 30/09/2026 14:21 · T9 — commits, merge da feat/infra e push aprovados
+
+> pode commitar, fazer o merge e dar push
+
+### P85 — 30/09/2026 14:22 · Encerramento do Lab (backend mantido)
+
+> posso dar stop no lab?
+
+### P86 — 30/09/2026 14:23 · T10 — início do relatório
+
+> pode começar a T10
+
+### P87 — 30/09/2026 14:34 · T10 — como ver o modelo no terminal
+
+> qual o comando para ver o modelo utilizado aqui no claude code? é /...
+
+### P88 — 30/09/2026 14:37 · T10 — ferramenta e modelo dos dois agentes
+
+> Nessa prova eu usei o Claude como agente, modelo Opus 5.5 para os dois agentes utilizados ( IA-autora e IA-revisora).
+
+### P89 — 30/09/2026 14:38 · T10 — correção: revisora com esforço alto
+
+> corrige, a revisora usa o modelo Opus 5.5 alto
+
+### P90 — 30/09/2026 14:44 · T10 — texto do usuário: Q1 (por que a ordem)
+
+> Q1- Eu escolhi essa ordem em decorrência dos aprendizados dos TFs passados, principalmente o TF 07, onde eu entendi melhor a execução do Spec Driven, então solicitei para minha agente IA-autora fizesse a prova em etapas separadas e antes de seguir para a próxima precisava passar por uma validação da IA-revisora, e por fim, a minha permissão para seguir.
+
+### P91 — 30/09/2026 14:46 · T10 — dúvida: tamanho mínimo das reflexões
+
+> Só uma dúvida, a minha reflexão tem regra? por exemplo, 10 linhas obrigatórias?
+
+### P92 — 30/09/2026 14:48 · T10 — texto da Q2 (dois agentes) confirmado
+
+> o texto da Q2 sobre os dois agentes está confirmado
+
+### P93 — 30/09/2026 14:50 · T10 — restaurar o relatório após Ctrl+Z no editor
+
+> aconteceu o seguinte, eu dei ctrl z para desfazer algumas coisas, mas eu me enganei, pode corrigir
+
+### P94 — 30/09/2026 14:56 · T10 — texto do usuário: Q2 (comparação com o manual)
+
+> q2 - Sobre a comparação em fazer manualmente ou com a IA, minha experiência foi positiva, com o auxílio dos agentes eu pude terminar a prova dentro do prazo, manualmente o prazo seria apertado com risco de mais erros. O fluxo que eu adotei para o projeto permitiu mais correções em curto prazo, o maior tempo gasto foi com o processo de mandar o resumo do painel de trabalho para IA-autora para a IA-revisora analisar e depois devolver o feedback para a autora, que também foi positivo para minha experiência, já que a revisora fez ajustes e correções durante o progresso.
+
+### P95 — 30/09/2026 15:02 · T10 — texto do usuário: Q3 (o Lab)
+
+> q3 - O Lab estava com instabilidade durante o meu desenvolvimento da prova, mas no dia seguinte eu consegui acessar e fazer os objetivos da prova. Com essa prova, tive uma visão mais clara de como é navegar pelo painel da AWS pesquisando e acessando suas ferramentas. Como experiência individual, foi positiva.
+
+### P96 — 30/09/2026 15:06 · T10 — texto do usuário: Q4 (aceitar sem revisar)
+
+> Aceitar os códigos da IA sem a minha leitura e a revisão da IA-revisora seria um fator limitante para meu entendimento e negativo para o projeto, pois erros que foram corrigidos durante o processo da prova seriam aceitos e commitados para a entrega da prova.
+
+### P97 — 30/09/2026 15:09 · T10 — texto do usuário: Q4 (acréscimo sobre margem de melhora)
+
+> adicione na última: Entretanto, reconheço que meu uso da IA ainda tem muita margem para ser melhorado, otimizando a qualidade de entrega e os gastos de tokens de forma mais consciente e prática.
+
+### P98 — 30/09/2026 15:10 · T10 — frase mantida no parágrafo
+
+> pode deixar a frase no parágrafo, vou mandar o último texto
+
+### P99 — 30/09/2026 15:15 · T10 — texto do usuário: Q4 (evolução e responsabilidade)
+
+> Minhas últimas experiências me deram mais maturidade para usar a IA em projetos da faculdade e outros fora. Antes, eu usava a IA como um agente cego sem restrições, guiando com prompts mais genéricos e deixando pontos importantes com uma revisão fraca, e aceitando mais facilmente as sugestões do agente. Hoje, eu reconheço que esse método de uso não é mais adequado, principalmente para os trabalhos mais complexos dos TFs, hoje eu me sinto inseguro em aceitar que a IA continue uma tarefa sem passar por verificação, e também gostei da metodologia de quebrar o problema em partes, e resolver uma etapa de cada vez.
+
+### P100 — 30/09/2026 15:20 · T10 — parecer V09 (2 ajustes de precisão)
+
+_Parecer da IA-revisora, colado pelo usuário:_
+
+> Parecer V09 — 15:19 BRT 30/09 (último confirmado pela IA-autora: V08)
+>
+> Revisão da T10 — relatorio.md (staged, docs/relatorio): APROVADA com 2
+> ajustes de precisão.
+>
+> Conferido contra o repo: mapeamento das aulas (READMEs das aulas 03-06
+> no repo da disciplina); describe-images na evidência do plan (l. 636);
+> backup do state do backend fora do repo; E1–E18; 17/17; 19 recursos;
+> contorno SCP/untaint; Q1 25, Q2 33, Q3 48, Q4 32 linhas; ferramenta no
+> início; nenhuma chave, conta, IP ou senha.
+>
+> Ajustes:
+> 1. l. 67: "numerados de V01 a V08" fica desatualizado a cada parecer.
+>    Trocar por "numerados a partir de V01" (ou atualizar para o número
+>    final na T11).
+> 2. l. 177: "o mesmo erro no plano da infraestrutura levaria a senha do
+>    banco para o repositório" → "poderia levar": o arquivo de plano
+>    guarda os valores sensíveis em texto, mas o erro não chegou a ser
+>    commitado. A frase deve dizer o risco, não um fato.
+>
+> Mudança de sentido na reflexão final: decisão do usuário (alternativa
+> mais literal sugerida a ele).
+>
+> Commit "docs: adiciona relatório do processo", merge --no-ff
+> docs/relatorio e push: aprovados depois dos 2 ajustes e da decisão do
+> usuário sobre a frase.
+>
+> Pareceres emitidos desde o último confirmado: V09.
+
+### P101 — 30/09/2026 15:21 · T10 — frase final da Q4: versão mais literal
+
+> use a alternativa mais literal
