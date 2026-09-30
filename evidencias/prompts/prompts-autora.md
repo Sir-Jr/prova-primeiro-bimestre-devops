@@ -619,3 +619,57 @@ _Parecer da IA-revisora, colado pelo usuário:_
 > antes do apply.
 >
 > Pareceres emitidos desde o último confirmado: V06.
+
+### P51 — 30/09/2026 13:05 · T6 (commit) → T8 — init e plan; avisar na etapa das evidências do painel da AWS
+
+> pode commitar e dar push
+
+### P52 — 30/09/2026 13:07 · T8 — parecer V07 (plan aprovado) e apply aprovado pelo usuário
+
+> pode seguir com a T8, quando chegar a etapa das evidências do painel da AWS você me avisa.
+
+### P53 — 30/09/2026 13:12 · —
+
+> resposta da revisora:
+
+_Parecer da IA-revisora, colado pelo usuário:_
+
+> Parecer V07 — 13:12 BRT 30/09 (último confirmado pela IA-autora: V06)
+>
+> Revisão do plan da T8 (evidencias/terraform-plan.txt): APROVADO para
+> apply.
+>
+> Conferido no plan (não no resumo):
+> - 19 recursos batem com o design: VPC, IGW, 4 subnets (públicas com
+>   map_public_ip_on_launch = true, privadas false), route table + 2
+>   associações, 2 SGs + 5 regras, subnet group, RDS, EC2. 0 change,
+>   0 destroy.
+> - Nenhum aws_iam_*; iam_instance_profile = "LabInstanceProfile".
+> - RDS: publicly_accessible = false, storage_encrypted = true, engine 16,
+>   db.t3.micro, multi_az false, backup 0, skip_final_snapshot true,
+>   deletion_protection false (destroy limpo no fim da T9).
+> - 5432: só source_security_group_id, sem cidr_blocks. 22: /32
+>   mascarado. 3000: 0.0.0.0/0 (API pública, requisito).
+> - EC2: t2.micro, vockey, http_tokens = "required", user_data e senha
+>   como (sensitive value), user_data_replace_on_change = true.
+> - AMI al2023-ami-2023.12.20260928.0-kernel-6.12-x86_64 (sem minimal).
+> - default_tags presentes (Owner 6325269) nos recursos que aceitam tags.
+> - terraform.tfvars (modo 600) e infra.tfplan ignorados; IP e senhas
+>   ausentes do staged.
+>
+> Para o apply (T9):
+> 1. Aplicar o plano salvo: terraform apply infra.tfplan. Assim o que vai
+>    para a AWS é exatamente o que foi revisado. Se ele ficar "stale",
+>    refazer o plan e me mostrar o diff.
+> 2. Checar antes se as credenciais do Lab têm tempo restante: o RDS
+>    leva vários minutos, e um ExpiredToken no meio deixa o apply pela
+>    metade.
+> 3. Depois do apply: esperar o user_data, rodar o smoke test, fazer o
+>    POST que fica gravado + GET (R7.5), describe-db-instances e só
+>    então o destroy.
+>
+> Commit "docs: adiciona evidência do terraform plan": aprovado.
+>
+> Pareceres emitidos desde o último confirmado: V07.
+
+> Eu como revisador, aprovo o apply.

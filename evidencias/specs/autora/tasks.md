@@ -125,13 +125,20 @@
 - [x] `infra/main.tf` (AMI, vpc, sg_ec2, sg_rds, rds, ec2 com `templatefile`)
 - [x] `infra/templates/user_data.sh.tftpl` (sem `set -x`; senha só no `api.env` com modo 600, passada ao container por `--env-file`)
 - [x] `infra/outputs.tf` (IP, endpoint, `api_url`, `health_url`, `ssh_command`)
+- [x] `init` com backend S3 (30/09; warning do `dynamodb_table` registrado), `fmt -check`, `validate`
+- [x] `plan`: 19 a adicionar, 0 a alterar, 0 a destruir; checklist D6 conferido no plan — nenhum IAM;
+  RDS `publicly_accessible = false`, `storage_encrypted = true`, PostgreSQL 16; 5432 só do SG da EC2;
+  22 só do `/32`; IMDSv2 `required`; senha e `user_data` como `(sensitive value)`; AMI
+  `al2023-ami-2023.12.20260928.0-kernel-6.12-x86_64` (dono `amazon`, não `minimal`/`ecs`)
+- [x] Parecer da IA-revisora sobre o plan antes do `apply` (V07, 30/09: aprovado; aplicar o plano salvo `infra.tfplan`)
 - **Requisitos:** R7.5–R7.9, R8.3 · **Design:** D5.3–D5.9, D6
 - **Código pronto e validado offline** (`init -backend=false` + `validate`, template renderizado com
   `bash -n`, validações testadas no `terraform console`); `init` com backend e `plan` **aguardam o Lab**
 - **Pronto quando:** `init` usa o backend S3; `validate` ok; `plan` sem erros e aprovado no
   checklist D6 (sem IAM, RDS privado + encriptado, 5432 só do SG, 22 só `/32`)
 - **Conferir no plan:** nome da AMI escolhida (`al2023-ami-2023.*`, não `minimal`/`ecs`)
-- **Evidências:** `evidencias/terraform-plan.txt` e o `init` com o warning do `dynamodb_table`
+- **Evidências:** `evidencias/terraform-plan.txt` (init com o warning do `dynamodb_table`, validate, plan e
+  nome da AMI; IP do administrador mascarado)
   (deprecated no Terraform 1.16; mantido porque o enunciado exige DynamoDB)
 - **Commits:** `feat: adiciona composição dos módulos da infraestrutura`,
   `docs: adiciona evidência do terraform plan`
