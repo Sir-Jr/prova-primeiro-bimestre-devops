@@ -669,3 +669,257 @@ Export atualizado no mesmo caminho: `/home/sirla/faculdade/projeto_ale/prompts-r
 prompts-revisora.md atualizado: R01–R29 (29/09, até 20:00 BRT).
 Substituir a seção inteira da revisora no prompts-completos.md.
 ```
+
+### A30 — 30/09/2026 12:31
+
+_Em resposta a:_ “onde está sua spec? exporte seu spec em um arquivo”
+
+Eu não tinha uma spec em arquivo. As minhas decisões estavam só nos pareceres deste thread e na minha seção da memória. Agora exportei tudo em `spec-revisora.md`, com uma cópia local em `/home/sirla/faculdade/projeto_ale/spec-revisora.md`, fora do repo da prova.
+
+O arquivo tem as minhas 29 respostas literais (A01 a A29), com horário BRT e a sua mensagem a que cada uma responde. Os pareceres numerados V01 a V04 estão no fim. No cabeçalho estão o papel e as regras da revisora. Ele complementa o `prompts-revisora.md`: um tem os seus prompts, e este tem as minhas respostas.
+
+### A31 — 30/09/2026 12:39
+
+_Em resposta a:_ “atualização : A reorganização está feita e staged na feat/infra. Ainda não fiz o commit: pelo nosso fluxo, ele espera o ”
+
+Conferi o staged na `feat/infra`. A reorganização está coerente: os `git mv` preservam o histórico, a correção da AMI do V04 entrou (fd581b6) e a senha do `.env` não aparece em nenhum arquivo staged. Achei 2 problemas nos arquivos de registro. Um deles vem do meu próprio export, e já gerei a versão corrigida.
+
+```
+Parecer V05 — 12:38 BRT 30/09 (último confirmado pela IA-autora: V04)
+
+Revisão da reorganização em evidencias/ (staged, feat/infra):
+APROVADA com 2 ajustes.
+
+Conferido: renames com git mv (specs/ → evidencias/specs/autora e
+evidencias/prompts); README e spec com caminhos novos; AMI filtrada por
+"al2023-ami-2023.*" (fd581b6); senha do .env ausente de todo o staged;
+nenhum link relativo quebrado nos .md, exceto os 2 abaixo. O link para
+../../relatorio.md só vai funcionar quando a T10 criar o relatorio.md
+(esperado).
+
+Ajuste 1 — spec-revisora.md (erro da IA-revisora, registrar como E16):
+- O export tinha 2 links para /mnt/project-files/..., uma pasta local
+  que não existe no GitHub (links quebrados no repo público).
+- Versão corrigida em /home/sirla/faculdade/projeto_ale/spec-revisora.md:
+  os links viraram texto simples, e o cabeçalho declara essa única
+  alteração e aponta para prompts-revisora.md. Substituir
+  evidencias/specs/revisora/spec-revisora.md por ela.
+
+Ajuste 2 — prompts-revisora.md:
+- O R11 cita literalmente o nome do modelo da IA-revisora, mas este
+  arquivo não tem a nota "texto literal, inclusive nomes de
+  ferramentas; a ferramenta usada é apresentada no relatorio.md" que o
+  prompts-autora.md tem. Acrescentar a mesma nota no topo (decisão P04,
+  opção A, vale para os dois arquivos).
+
+Respostas pela janela de perguntas registradas na coluna Revisão da
+linha #13: de acordo.
+Commit "docs: reorganiza spec, prompts e imagens na pasta evidencias":
+aprovado depois dos 2 ajustes.
+
+Pareceres emitidos desde o último confirmado: V05.
+```
+
+### A32 — 30/09/2026 13:01
+
+_Em resposta a:_ “O backend do remote state está criado na AWS e passou em todas as conferências da T6.”
+
+Conferi o staged: a evidência mostra o erro real da SCP, o `untaint` e as conferências. Não há credencial, ID de conta nem senha no staged nem em todo o histórico do Git. Os ajustes do V05 entraram (d31736f). Pode commitar.
+
+```
+Parecer V06 — 13:02 BRT 30/09 (último confirmado pela IA-autora: V05)
+
+Revisão da T6 — apply do backend (staged, feat/infra): APROVADA.
+
+Conferido:
+- evidencias/terraform-backend.txt: erro real da SCP (l. 161),
+  untaint (l. 175) e conferências; conta, sessão, org e policy
+  mascaradas, com aviso no cabeçalho.
+- Varredura no staged e em git log -p --all: nenhuma chave ASIA/AKIA,
+  secret, session token ou número de conta de 12 dígitos.
+- Nenhum tfplan versionado (E17 sem consequência no repo); o
+  terraform.tfstate do backend continua ignorado.
+- V05 aplicado: nota de texto literal no prompts-revisora.md;
+  spec-revisora.md sem /mnt/project-files; E16 registrado.
+
+E7: atualizar o status para "confirmado também na execução da T6
+(tainted → untaint → plan -refresh=false com 3 a adicionar, 0 a
+destruir)". O fato fecha a divergência.
+
+Recomendação (fora do repo): copiar infra/backend/terraform.tfstate
+para um backup local fora do repositório. É a única cópia, e sem ela
+a limpeza da T11 vira manual.
+
+Commit "docs: adiciona evidência do backend do remote state e atualiza
+spec da T6": aprovado. Seguir para o init da T8; o plan passa por mim
+antes do apply.
+
+Pareceres emitidos desde o último confirmado: V06.
+```
+
+Sobre as credenciais que você colou no painel do executor: no repo elas ficaram mascaradas, mas continuam no histórico da sessão local dele. Como são temporárias do Lab, expiram sozinhas. Mesmo assim, evite colar essas credenciais em conversa.
+
+### A33 — 30/09/2026 13:11
+
+_Em resposta a:_ “O plan da T8 está pronto e parei antes do apply, para ele passar pela revisora como combinado.”
+
+Li o plan inteiro em `evidencias/terraform-plan.txt` e conferi recurso por recurso. Está correto e seguro para aplicar. A autorização do apply é sua, porque ele cria recursos pagos na conta do Lab.
+
+```
+Parecer V07 — 13:12 BRT 30/09 (último confirmado pela IA-autora: V06)
+
+Revisão do plan da T8 (evidencias/terraform-plan.txt): APROVADO para
+apply.
+
+Conferido no plan (não no resumo):
+- 19 recursos batem com o design: VPC, IGW, 4 subnets (públicas com
+  map_public_ip_on_launch = true, privadas false), route table + 2
+  associações, 2 SGs + 5 regras, subnet group, RDS, EC2. 0 change,
+  0 destroy.
+- Nenhum aws_iam_*; iam_instance_profile = "LabInstanceProfile".
+- RDS: publicly_accessible = false, storage_encrypted = true, engine 16,
+  db.t3.micro, multi_az false, backup 0, skip_final_snapshot true,
+  deletion_protection false (destroy limpo no fim da T9).
+- 5432: só source_security_group_id, sem cidr_blocks. 22: /32
+  mascarado. 3000: 0.0.0.0/0 (API pública, requisito).
+- EC2: t2.micro, vockey, http_tokens = "required", user_data e senha
+  como (sensitive value), user_data_replace_on_change = true.
+- AMI al2023-ami-2023.12.20260928.0-kernel-6.12-x86_64 (sem minimal).
+- default_tags presentes (Owner 6325269) nos recursos que aceitam tags.
+- terraform.tfvars (modo 600) e infra.tfplan ignorados; IP e senhas
+  ausentes do staged.
+
+Para o apply (T9):
+1. Aplicar o plano salvo: terraform apply infra.tfplan. Assim o que vai
+   para a AWS é exatamente o que foi revisado. Se ele ficar "stale",
+   refazer o plan e me mostrar o diff.
+2. Checar antes se as credenciais do Lab têm tempo restante: o RDS
+   leva vários minutos, e um ExpiredToken no meio deixa o apply pela
+   metade.
+3. Depois do apply: esperar o user_data, rodar o smoke test, fazer o
+   POST que fica gravado + GET (R7.5), describe-db-instances e só
+   então o destroy.
+
+Commit "docs: adiciona evidência do terraform plan": aprovado.
+
+Pareceres emitidos desde o último confirmado: V07.
+```
+
+### A34 — 30/09/2026 14:20
+
+_Em resposta a:_ “O destroy terminou, e a execução da T9 na AWS acabou.”
+
+Conferi o staged da T9 e abri as 13 capturas uma a uma. Não há dado sensível em nenhuma: o seu IP aparece tarjado no SG da EC2 (07) e o ID da conta tarjado em "Proprietário" (13). Nos `.txt`, a varredura não achou o seu IP, conta de 12 dígitos nem chave. Pode commitar.
+
+```
+Parecer V08 — 14:16 BRT 30/09 (último confirmado pela IA-autora: V07)
+
+Revisão da T9 — apply, teste e destroy (staged, feat/infra): APROVADA.
+
+Conferido nos arquivos e nas 13 imagens (abertas uma a uma):
+- curl-aws.txt: smoke test 17/17 na EC2 + reserva id 2 gravada e lida
+  (prova do R7.5); a imagem 11 mostra o mesmo registro.
+- rds-describe.txt: PubliclyAccessible false, StorageEncrypted true;
+  imagens 02-04 confirmam db.t3.micro, us-east-1b, sem internet
+  gateway, KMS aws/rds.
+- SGs: 06 mostra 5432 só a partir do SG da EC2; 07 mostra 22 com o IP
+  tarjado /32 e 3000 aberta.
+- Remote state: 08-09 mostram o terraform.tfstate em prova/ com 2
+  versões; 10 mostra a tabela de lock ativa com LockID (S).
+- terraform-destroy.txt: 19 destroyed; backend mantido (decisão T11).
+- Dados sensíveis: IP do administrador tarjado (07), conta tarjada em
+  "Proprietário" (13); nenhum IP do admin, conta de 12 dígitos ou chave
+  nos .txt. O IP da EC2 e os IDs de VPC/SG são de recursos já
+  destruídos, e o IP da EC2 é a própria URL da API (evidência exigida).
+
+E18 e exportador ignorando <task-notification>: de acordo.
+
+Commit docs da T9 e merge --no-ff feat/infra no main: aprovados.
+Depois do merge, push do main e da feat/infra.
+
+Próxima (T10): relatório. As reflexões das 4 questões vêm do usuário;
+a IA-autora monta estrutura e fatos e para para pedir o texto dele.
+
+Pareceres emitidos desde o último confirmado: V08.
+```
+
+A próxima tarefa é o relatório, e as reflexões das 4 questões vêm de você. O executor deve parar e pedir o seu texto antes de escrever essa parte.
+
+### A35 — 30/09/2026 14:20
+
+_Em resposta a:_ “O destroy terminou, e a execução da T9 na AWS acabou.”
+
+Essa mensagem é a mesma de antes, e o parecer V08 acima já responde a ela. Conferi de novo: o repo continua igual (último commit dffe2a7, com os mesmos 22 arquivos staged), então o V08 vale como está. Pode repassar e seguir com o commit e o merge.
+
+### A36 — 30/09/2026 15:19
+
+_Em resposta a:_ “O relatório está completo. Encaixei o último texto só com ajustes de redação. Uma mudança de sentido para você conferir:”
+
+Li o `relatorio.md` inteiro e conferi as afirmações contra o repo, porque o avaliador pode checar. Batem: o mapeamento das aulas (Aula 03 IAM, 04 VPC/EC2, 05 RDS + Remote State, 06 Modules), o `describe-images` na evidência do plan, o backup do state do backend (em `.ferramentas-prova/backup-tfstate`), E1–E18, 17/17, 19 recursos e o contorno da SCP. As 4 questões passam de 10 linhas, e a ferramenta está no início. Aprovado, com 2 ajustes de precisão.
+
+Sobre a mudança de sentido: a nova frase amplia um pouco a original. "Inseguro em aceitar" fala do que a IA entrega. "Deixar a IA continuar uma tarefa" fala de autonomia. A decisão é sua. Se quiser ficar mais perto do original: "não me sinto seguro em aceitar o que a IA entrega sem passar por verificação".
+
+```
+Parecer V09 — 15:19 BRT 30/09 (último confirmado pela IA-autora: V08)
+
+Revisão da T10 — relatorio.md (staged, docs/relatorio): APROVADA com 2
+ajustes de precisão.
+
+Conferido contra o repo: mapeamento das aulas (READMEs das aulas 03-06
+no repo da disciplina); describe-images na evidência do plan (l. 636);
+backup do state do backend fora do repo; E1–E18; 17/17; 19 recursos;
+contorno SCP/untaint; Q1 25, Q2 33, Q3 48, Q4 32 linhas; ferramenta no
+início; nenhuma chave, conta, IP ou senha.
+
+Ajustes:
+1. l. 67: "numerados de V01 a V08" fica desatualizado a cada parecer.
+   Trocar por "numerados a partir de V01" (ou atualizar para o número
+   final na T11).
+2. l. 177: "o mesmo erro no plano da infraestrutura levaria a senha do
+   banco para o repositório" → "poderia levar": o arquivo de plano
+   guarda os valores sensíveis em texto, mas o erro não chegou a ser
+   commitado. A frase deve dizer o risco, não um fato.
+
+Mudança de sentido na reflexão final: decisão do usuário (alternativa
+mais literal sugerida a ele).
+
+Commit "docs: adiciona relatório do processo", merge --no-ff
+docs/relatorio e push: aprovados depois dos 2 ajustes e da decisão do
+usuário sobre a frase.
+
+Pareceres emitidos desde o último confirmado: V09.
+```
+
+### A37 — 30/09/2026 15:28
+
+_Em resposta a:_ “Registrei a opção A para o entrega.md. O campo vai ficar: "Ferramenta de IA utilizada: Claude (Opus 5.5), descrita no re”
+
+Conferi a `docs/revisao-final` e refiz de forma independente as checagens da T11. Tudo bate, e os 2 ajustes do V09 entraram no relatório (e7efbe2). A opção A para o campo do `entrega.md` segue o modelo do enunciado, que pede o nome da ferramenta. Aprovado.
+
+```
+Parecer V10 — 15:29 BRT 30/09 (último confirmado pela IA-autora: V09)
+
+Revisão da T11 — revisão final (staged, docs/revisao-final): APROVADA.
+
+Refeito de forma independente:
+- main local = origin/main (0310217); repo responde 200 sem login.
+- 31 commits, 5 merges --no-ff; todos os assuntos em Conventional
+  Commits ou "Merge branch"; nenhum Co-authored-by.
+- git ls-files: nenhum .env, *.tfvars, *.tfstate, *.tfplan/tfplan,
+  *.pem, node_modules ou .terraform/.
+- prompts.md: nenhuma célula "(preencher após a revisão)" restante.
+- V09 aplicado: "a partir de V01" (l. 8 da Q2) e "poderia levar"
+  (l. 177); frase final escolhida pelo usuário.
+
+Campo "Ferramenta de IA utilizada" no entrega.md (opção A): de acordo;
+o modelo do enunciado pede esse campo.
+
+Commit "docs: registra revisão final da entrega", merge --no-ff
+docs/revisao-final e push: aprovados.
+
+T12 (só amanhã, 01/10, na aula): o entrega.md passa por mim antes do
+PR, porque o PR é imutável. Depois do PR: destruir o backend, esvaziando
+todas as versões do bucket antes.
+
+Pareceres emitidos desde o último confirmado: V10.
+```

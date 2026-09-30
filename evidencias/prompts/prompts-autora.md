@@ -968,3 +968,23 @@ _Parecer da IA-revisora, colado pelo usuário:_
 > todas as versões do bucket antes.
 >
 > Pareceres emitidos desde o último confirmado: V10.
+
+### P106 — 30/09/2026 15:29 · T11 — commit, merge da docs/revisao-final e push aprovados
+
+> pode commitar, fazer o merge e dar push
+
+### P107 — 30/09/2026 15:31 · Registro de prompts — conferir se os prompts de hoje estão salvos
+
+> antes de salvar na memória o nosso progresso até aqui, os prompts de hoje já estão salvos?
+
+### P108 — 30/09/2026 15:33 · Registro de prompts — exports da IA-revisora (R01–R38, A01–A37, V01–V10)
+
+_Parecer da IA-revisora, colado pelo usuário:_
+
+> Exports da IA-revisora atualizados (30/09 15:33 BRT):
+> - /home/sirla/faculdade/projeto_ale/prompts-revisora.md → R01–R38
+> - /home/sirla/faculdade/projeto_ale/spec-revisora.md → A01–A37,
+>   pareceres V01–V10; links locais já convertidos em texto.
+> Substituir os dois arquivos inteiros em evidencias/. Esta resposta
+> (A38) e qualquer prompt novo ficam para o export de amanhã, junto com
+> a T12.

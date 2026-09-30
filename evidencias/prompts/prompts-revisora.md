@@ -655,3 +655,258 @@ _Texto literal das mensagens do usuário no painel da IA-revisora, em ordem. Hor
 ### R29 — 29/09/2026 20:00
 
 > 2 - faça um novo export do prompts-revisora.md
+
+### R30 — 30/09/2026 12:31
+
+> onde está sua spec? exporte seu spec em um arquivo
+
+### R31 — 30/09/2026 12:38
+
+> atualização : A reorganização está feita e staged na feat/infra. Ainda não fiz o commit: pelo nosso fluxo, ele espera o seu OK.
+>
+> Nova estrutura de evidencias/:
+> evidencias/
+> ├── README.md                    # índice novo: o que é cada arquivo
+> ├── docker-build.txt, compose-ps.txt, curl-local.txt   (não mudaram)
+> ├── specs/
+> │   ├── autora/                  # requirements, design, tasks (movidos com git mv)
+> │   └── revisora/spec-revisora.md# A01–A29 + pareceres V01–V04 (export da revisora)
+> ├── prompts/
+> │   ├── prompts.md               # resumo por etapa + erros E1–E15
+> │   ├── prompts-autora.md        # P01–P39, literal (inclui os de hoje)
+> │   └── prompts-revisora.md      # R01–R29, literal
+> └── imagens/                     # vazia, pronta para os screenshots
+>
+> Arquivos atualizados:
+> - README: o link para a spec e a árvore de pastas apontam para evidencias/.
+> - Spec: os requisitos 9.1 e 9.2, a rastreabilidade do design e a regra de manutenção do tasks.md usam os caminhos novos. Também entrou no tasks.md uma nota da reorganização. Ela explica por que os commits antigos ainda citam specs/.
+> - prompts.md: tem uma linha nova (#13) para esta etapa.
+> - Script exportador: agora gera o prompts-autora.md e copia o export da revisora para prompts-revisora.md. Guardei um backup da versão antiga.
+> - Memória: atualizada com os caminhos novos.
+>
+> O que conferi:
+> - A senha real do .env não aparece em nenhum arquivo staged.
+> - O spec-revisora.md não tem nome de ferramenta de IA.
+> - A pasta imagens/ não está no .gitignore.
+>
+> Dois detalhes:
+> - As suas respostas às minhas perguntas, incluindo o texto da revisora sobre a spec dela, não entram no prompts-autora.md. O script só captura mensagens digitadas, e essas respostas vieram pela janela de perguntas. Registrei o conteúdo delas na coluna "Revisão" da linha #13 do prompts.md.
+> - O Git mostra prompts-completos.md → prompts-revisora.md como rename, porque os dois arquivos se parecem. É só como o Git exibe o diff, e o conteúdo está certo.
+>
+> Commit proposto (sem co-autoria, como combinado):
+> docs: reorganiza spec, prompts e imagens na pasta evidencias
+
+### R32 — 30/09/2026 13:01
+
+> O backend do remote state está criado na AWS e passou em todas as conferências da T6.
+>
+> Como foi o apply
+> 1. A primeira tentativa criou a tabela DynamoDB e o bucket. Logo depois, a SCP do Lab barrou a leitura do Object Lock (AccessDenied, explicit deny) e o bucket ficou tainted. Era o que a Aula 05 e o design D5.2 previam.
+> 2. Apliquei o contorno do D5.2: head-bucket confirmou que o bucket existe, untaint e depois um plan -refresh=false só com os 3 recursos que faltavam. Esse plan mostrou 3 a adicionar e nada a destruir, então o bucket não foi recriado. O apply dele terminou sem erro.
+> 3. Conferências: versioning Enabled, criptografia AES256, os 4 bloqueios de acesso público True, tabela ACTIVE com chave LockID. Os 5 recursos estão no state.
+>
+> Staged na feat/infra, ainda sem commit
+>
+> Arquivo: evidencias/terraform-backend.txt (novo)
+> O que muda: Saídas reais de antes do apply, do plan, do apply com o erro da SCP, do contorno e das
+> conferências. ID da conta, usuário do Lab, IDs da organização e da policy e RequestID/HostID
+> trocados por ***, com aviso no cabeçalho
+> ────────────────────────────────────────
+> Arquivo: evidencias/specs/autora/tasks.md
+> O que muda: T6 marcada, com commit e evidência
+> ────────────────────────────────────────
+> Arquivo: evidencias/prompts/prompts.md
+> O que muda: Linha #14 (T6 apply) e E17 (o meu tfplan sem extensão)
+> ────────────────────────────────────────
+> Arquivo: evidencias/prompts/prompts-autora.md
+> O que muda: Agora até o P49. A sua mensagem aparece como "começa com ASIA****"
+> ────────────────────────────────────────
+> Arquivo: evidencias/README.md
+> O que muda: A evidência nova entrou no índice
+>
+> - Dados sensíveis: procurei no conteúdo staged a chave, os IDs da conta, da organização e da policy, o usuário do Lab e a senha. Nenhuma ocorrência.
+> - Exportador de prompts: agora ignora a marca [Request interrupted by user], que o sistema grava quando você interrompe. Ela não é texto seu.
+> - Arquivos locais: apaguei os dois .tfplan, porque já foram aplicados.
+>
+> Commit proposto, separado do de código, que já existe (6ce7937):
+> docs: adiciona evidência do backend do remote state e atualiza spec da T6
+>
+> Quer levar para a revisora antes, ou posso commitar? Depois vem a T8: init com o backend S3 (guardando o warning do dynamodb_table) e o plan. Esse plan vai para a revisora antes do apply.
+
+### R33 — 30/09/2026 13:10
+
+> O plan da T8 está pronto e parei antes do apply, para ele passar pela revisora como combinado.
+>
+> O que foi feito
+> - infra/terraform.tfvars: criado fora do Git, com permissão 600. Tem o seu IP público com /32 e uma senha aleatória do RDS, 32 caracteres só letras e números. Nenhum dos dois valores apareceu na tela nem vai para o repo.
+> - init: conectou no backend S3 da T6 e mostrou o warning esperado do dynamodb_table.
+> - fmt -check, validate e busca por aws_iam_*: todos passaram, sem nenhum recurso IAM.
+> - plan: 19 a adicionar, 0 a alterar, 0 a destruir. Ficou salvo em infra/infra.tfplan, que o .gitignore já ignora.
+>
+> Checklist do D6 no plan
+>
+> ┌────────────────┬──────────────────────────────────────────────────────────────────────────────┐
+> │      Item      │                                  Resultado                                   │
+> ├────────────────┼──────────────────────────────────────────────────────────────────────────────┤
+> │ RDS            │ publicly_accessible = false, storage_encrypted = true, PostgreSQL 16,        │
+> │                │ db.t3.micro                                                                  │
+> ├────────────────┼──────────────────────────────────────────────────────────────────────────────┤
+> │ Porta 5432     │ só a partir do SG da EC2, sem CIDR                                           │
+> ├────────────────┼──────────────────────────────────────────────────────────────────────────────┤
+> │ Porta 22       │ só o seu IP /32                                                              │
+> ├────────────────┼──────────────────────────────────────────────────────────────────────────────┤
+> │ Porta 3000     │ 0.0.0.0/0, porque a API é pública                                            │
+> ├────────────────┼──────────────────────────────────────────────────────────────────────────────┤
+> │ EC2            │ LabInstanceProfile, vockey, IMDSv2 required, t2.micro                        │
+> ├────────────────┼──────────────────────────────────────────────────────────────────────────────┤
+> │ Senha e        │ aparecem como (sensitive value)                                              │
+> │ user_data      │                                                                              │
+> ├────────────────┼──────────────────────────────────────────────────────────────────────────────┤
+> │ AMI            │ al2023-ami-2023.12.20260928.0-kernel-6.12-x86_64, dono amazon. O filtro do   │
+> │                │ E15 funcionou                                                                │
+> └────────────────┴──────────────────────────────────────────────────────────────────────────────┘
+>
+> Staged, ainda sem commit
+> - evidencias/terraform-plan.txt: init, validate, plan e nome da AMI. O IP está mascarado e isso está declarado no cabeçalho.
+> - tasks.md: T8 atualizada, com um item em aberto para o parecer da revisora.
+> - prompts.md: linha #15.
+> - prompts-autora.md: agora até o P51.
+> - evidencias/README.md: a evidência nova entrou no índice.
+>
+> Procurei no conteúdo staged o IP, a senha do RDS, a senha do .env, chaves e números de conta. Nenhuma ocorrência.
+>
+> Próximo passo: leve o plan à revisora. Ela pode ler evidencias/terraform-plan.txt. Com o parecer e o seu OK, faço o commit docs: adiciona evidência do terraform plan e começo a T9 com o apply.
+
+### R34 — 30/09/2026 14:14
+
+> O destroy terminou, e a execução da T9 na AWS acabou.
+>
+> Destroy
+> - plan -destroy com 19 recursos, depois destroy: 19 destroyed.
+> - Conferência na AWS: o state está vazio e não sobrou nenhuma EC2, RDS, VPC ou SG com a tag do projeto.
+> - O backend S3 e o DynamoDB continuam de pé, como decidido, até depois do PR.
+>
+> Staged na feat/infra, ainda sem commit
+>
+> ┌────────────────────────────────┬──────────────────────────────────────────────────────────────┐
+> │            Arquivo             │                           Conteúdo                           │
+> ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+> │ terraform-apply.txt            │ apply do plano revisado (19 recursos) e outputs              │
+> ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+> │ curl-aws.txt                   │ smoke test 17/17 na EC2 e reserva id 2 gravada no RDS        │
+> ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+> │ rds-describe.txt               │ RDS privado e encriptado, 2 versões do state no S3 (AES256)  │
+> │                                │ e digest no DynamoDB                                         │
+> ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+> │ terraform-destroy.txt          │ plan de destroy, destroy e conferência de que nada ficou     │
+> ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+> │ imagens/01–13                  │ as 13 capturas que você mandou e conferiu                    │
+> ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+> │ README.md                      │ seção "Como provisionar na AWS": backend com o contorno da   │
+> │                                │ SCP, infra, teste e destroy, com links para as evidências    │
+> ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+> │ tasks.md, prompts.md,          │ T9 marcada, linha #16, índice das imagens                    │
+> │ evidencias/README.md           │                                                              │
+> └────────────────────────────────┴──────────────────────────────────────────────────────────────┘
+>
+> Nas evidências .txt, o ID da conta e o seu IP estão mascarados, inclusive dentro dos ARNs. A varredura final não achou IP, senhas, conta nem chave.
+>
+> E18 (erro meu): no último commit (dffe2a7), os rótulos dos prompts P51 e P52 estavam deslocados em uma posição, e a linha #15 citava P51 em vez de P52. Refiz os rótulos a partir do texto de cada prompt. O exportador agora também ignora os avisos automáticos <task-notification>, que não são texto seu. O registro vai até o P82.
+
+### R35 — 30/09/2026 14:19
+
+> O destroy terminou, e a execução da T9 na AWS acabou.
+> Destroy
+>
+> * plan -destroy com 19 recursos, depois destroy: 19 destroyed.
+> * Conferência na AWS: o state está vazio e não sobrou nenhuma EC2, RDS, VPC ou SG com a tag do projeto.
+> * O backend S3 e o DynamoDB continuam de pé, como decidido, até depois do PR.
+>
+> Staged na feat/infra, ainda sem commit
+> ┌────────────────────────────────┬──────────────────────────────────────────────────────────────┐
+> │ Arquivo │ Conteúdo │
+> ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+> │ terraform-apply.txt │ apply do plano revisado (19 recursos) e outputs │
+> ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+> │ curl-aws.txt │ smoke test 17/17 na EC2 e reserva id 2 gravada no RDS │
+> ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+> │ rds-describe.txt │ RDS privado e encriptado, 2 versões do state no S3 (AES256) │
+> │ │ e digest no DynamoDB │
+> ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+> │ terraform-destroy.txt │ plan de destroy, destroy e conferência de que nada ficou │
+> ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+> │ imagens/01–13 │ as 13 capturas que você mandou e conferiu │
+> ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+> │ README.md │ seção "Como provisionar na AWS": backend com o contorno da │
+> │ │ SCP, infra, teste e destroy, com links para as evidências │
+> ├────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+> │ tasks.md, prompts.md, │ T9 marcada, linha #16, índice das imagens │
+> │ evidencias/README.md │ │
+> └────────────────────────────────┴──────────────────────────────────────────────────────────────┘
+> Nas evidências .txt, o ID da conta e o seu IP estão mascarados, inclusive dentro dos ARNs. A varredura final não achou IP, senhas, conta nem chave.
+> E18 (erro meu): no último commit (dffe2a7), os rótulos dos prompts P51 e P52 estavam deslocados em uma posição, e a linha #15 citava P51 em vez de P52. Refiz os rótulos a partir do texto de cada prompt. O exportador agora também ignora os avisos automáticos <task-notification>, que não são texto seu. O registro vai até o P82.
+
+### R36 — 30/09/2026 15:16
+
+> O relatório está completo. Encaixei o último texto só com ajustes de redação. Uma mudança de sentido para você conferir: "me sinto inseguro em aceitar" virou "não me sinto seguro em deixar a IA continuar uma tarefa sem passar por verificação".
+>
+> Estado do relatorio.md
+> - Os 7 marcadores foram preenchidos com os seus textos.
+> - Todas as questões passam de 10 linhas: Q1 com 25, Q2 com 33, Q3 com 48 e Q4 com 32.
+> - A ferramenta de IA aparece no início, e o relatorio.md é o único arquivo do repo que cita o Claude ou o Opus, fora os registros literais de prompts, como combinamos.
+> - A varredura não achou chave, conta, IP nem senha.
+>
+> Staged na docs/relatorio, ainda sem commit
+> - relatorio.md, que é novo;
+> - tasks.md, com a T10 marcada;
+> - prompts.md, com a linha #17;
+> - prompts-autora.md, agora até o P99, com os rótulos de cada texto seu.
+>
+> Próximo passo: leve à revisora. Ela pode ler o relatorio.md direto na pasta do repo. Com o parecer e o seu OK, faço:
+> 1. o commit docs: adiciona relatório do processo;
+> 2. o git merge --no-ff docs/relatorio na main;
+> 3. o push.
+>
+> Depois vem a T11 (revisão final), que já tem uma pendência anotada: a linha #9 (T5) do prompts.md continua com "(preencher após a revisão)".
+
+### R37 — 30/09/2026 15:28
+
+> Registrei a opção A para o entrega.md. O campo vai ficar: "Ferramenta de IA utilizada: Claude (Opus 5.5), descrita no relatorio.md".
+>
+> A decisão ficou registrada em três lugares:
+> - tasks.md: a T12 agora descreve esse campo, com a data e o motivo (seguir o modelo do enunciado);
+> - prompts.md: coluna "Revisão" da linha #18, e o P104 foi rotulado no prompts-autora.md;
+> - memória: a regra "ferramenta só no relatorio.md" passa a ter essa exceção.
+>
+> Tudo continua staged na docs/revisao-final, junto com a revisão da T11. Leve à revisora: com o parecer e o seu OK, faço o commit docs: registra revisão final da entrega, o merge na main e o push.
+
+### R38 — 30/09/2026 15:32
+
+> 2 - Os prompts de hoje estão salvos só em parte.
+>
+> ┌──────────────────────────────────┬──────────────────────┬─────────────────────────────────────┐
+> │             Registro             │  No GitHub vai até   │                Falta                │
+> ├──────────────────────────────────┼──────────────────────┼─────────────────────────────────────┤
+> │                                  │                      │ P106 ("pode commitar, fazer o merge │
+> │ IA-autora (prompts-autora.md)    │ P105 (o V10, 15:28)  │  e dar push") e P107 (esta          │
+> │                                  │                      │ pergunta)                           │
+> ├──────────────────────────────────┼──────────────────────┼─────────────────────────────────────┤
+> │ IA-revisora, seus prompts        │ R29, de ontem às     │ tudo o que você mandou para a       │
+> │ (prompts-revisora.md)            │ 20:00                │ revisora hoje                       │
+> ├──────────────────────────────────┼──────────────────────┼─────────────────────────────────────┤
+> │ IA-revisora, respostas           │ A29, com o último    │ as respostas de hoje, com os        │
+> │ (spec-revisora.md)               │ parecer V04, de      │ pareceres V05 a V10                 │
+> │                                  │ ontem                │                                     │
+> └──────────────────────────────────┴──────────────────────┴─────────────────────────────────────┘
+>
+> Os pareceres V05 a V10 aparecem no prompts-autora.md, porque você os colou aqui. Mas os dois arquivos da revisora não foram exportados de novo desde ontem.
+>
+> Para fechar o registro de hoje:
+> 1. No painel da revisora, peça os dois exports, como fez ontem:
+>    - "faça um novo export do prompts-revisora.md" (R01 até o último);
+>    - "faça um novo export do spec-revisora.md" (A01 até o último, com os pareceres até o V10, sem links locais).
+> 2. Quando os dois arquivos estiverem atualizados em /home/sirla/faculdade/projeto_ale/, me avise. Eu:
+>    - gero o prompts-autora.md de novo, até o último prompt de hoje;
+>    - copio os exports da revisora e confiro senha, chaves, conta e links quebrados;
+>    - faço um commit docs: com o merge na main, depois de o parecer e o seu OK passarem pelo fluxo de sempre;
+>    - por último, salvo o progresso na memória.
