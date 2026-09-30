@@ -1,0 +1,96 @@
+# Evidência da T9 — terraform apply do plano revisado (infra/infra.tfplan, parecer V07), 30/09/2026, Learner Lab us-east-1
+# Dados sensíveis mascarados com ***: ID da conta AWS e IP público do administrador (regra SSH /32). A senha do RDS
+# nunca aparece: o Terraform a exibe como (sensitive value). Fora isso, saídas reais, sem edição.
+
+$ terraform apply infra.tfplan
+
+Warning: Deprecated Parameter
+
+The parameter "dynamodb_table" is deprecated. Use parameter "use_lockfile"
+instead.
+Acquiring state lock. This may take a few moments...
+module.vpc.aws_vpc.main: Creating...
+module.vpc.aws_vpc.main: Still creating... [00m10s elapsed]
+module.vpc.aws_vpc.main: Creation complete after 14s [id=vpc-089099094030c9a46]
+module.vpc.aws_internet_gateway.main: Creating...
+module.vpc.aws_subnet.this["private-1"]: Creating...
+module.vpc.aws_subnet.this["public-2"]: Creating...
+module.vpc.aws_subnet.this["private-2"]: Creating...
+module.vpc.aws_subnet.this["public-1"]: Creating...
+module.sg_ec2.aws_security_group.this: Creating...
+module.sg_rds.aws_security_group.this: Creating...
+module.vpc.aws_internet_gateway.main: Creation complete after 1s [id=igw-09e542c9ec3cd217e]
+module.vpc.aws_route_table.public: Creating...
+module.vpc.aws_subnet.this["private-1"]: Creation complete after 1s [id=subnet-06839734ef191e338]
+module.vpc.aws_subnet.this["private-2"]: Creation complete after 1s [id=subnet-03867db191e12bf3f]
+module.vpc.aws_route_table.public: Creation complete after 2s [id=rtb-092601d102bfb6cd6]
+module.sg_rds.aws_security_group.this: Creation complete after 3s [id=sg-0e7dcf13c3c34f7af]
+module.sg_rds.aws_security_group_rule.egress[0]: Creating...
+module.sg_ec2.aws_security_group.this: Creation complete after 3s [id=sg-07332a2f98b8b857f]
+module.sg_ec2.aws_security_group_rule.egress[0]: Creating...
+module.sg_ec2.aws_security_group_rule.ingress[1]: Creating...
+module.sg_ec2.aws_security_group_rule.ingress[0]: Creating...
+module.sg_rds.aws_security_group_rule.ingress[0]: Creating...
+module.sg_rds.aws_security_group_rule.egress[0]: Creation complete after 1s [id=sgrule-500171328]
+module.sg_ec2.aws_security_group_rule.egress[0]: Creation complete after 1s [id=sgrule-4205737888]
+module.sg_rds.aws_security_group_rule.ingress[0]: Creation complete after 2s [id=sgrule-1817597374]
+module.sg_ec2.aws_security_group_rule.ingress[1]: Creation complete after 2s [id=sgrule-4109852260]
+module.sg_ec2.aws_security_group_rule.ingress[0]: Creation complete after 3s [id=sgrule-469390123]
+module.vpc.aws_subnet.this["public-2"]: Still creating... [00m10s elapsed]
+module.vpc.aws_subnet.this["public-1"]: Still creating... [00m10s elapsed]
+module.vpc.aws_subnet.this["public-2"]: Creation complete after 12s [id=subnet-08aad886fec26ef2c]
+module.vpc.aws_subnet.this["public-1"]: Creation complete after 15s [id=subnet-0644aab6cc5415b6d]
+module.vpc.aws_route_table_association.public["public-2"]: Creating...
+module.vpc.aws_route_table_association.public["public-1"]: Creating...
+module.rds.aws_db_subnet_group.this: Creating...
+module.vpc.aws_route_table_association.public["public-2"]: Creation complete after 1s [id=rtbassoc-0e41f789506d326c3]
+module.vpc.aws_route_table_association.public["public-1"]: Creation complete after 1s [id=rtbassoc-0c4ec542d2f0cca91]
+module.rds.aws_db_subnet_group.this: Creation complete after 2s [id=technova-reservas-prova-db-subnet-group]
+module.rds.aws_db_instance.this: Creating...
+module.rds.aws_db_instance.this: Still creating... [00m10s elapsed]
+module.rds.aws_db_instance.this: Still creating... [00m20s elapsed]
+module.rds.aws_db_instance.this: Still creating... [00m30s elapsed]
+module.rds.aws_db_instance.this: Still creating... [00m40s elapsed]
+module.rds.aws_db_instance.this: Still creating... [00m50s elapsed]
+module.rds.aws_db_instance.this: Still creating... [01m00s elapsed]
+module.rds.aws_db_instance.this: Still creating... [01m10s elapsed]
+module.rds.aws_db_instance.this: Still creating... [01m20s elapsed]
+module.rds.aws_db_instance.this: Still creating... [01m30s elapsed]
+module.rds.aws_db_instance.this: Still creating... [01m40s elapsed]
+module.rds.aws_db_instance.this: Still creating... [01m50s elapsed]
+module.rds.aws_db_instance.this: Still creating... [02m00s elapsed]
+module.rds.aws_db_instance.this: Still creating... [02m10s elapsed]
+module.rds.aws_db_instance.this: Still creating... [02m20s elapsed]
+module.rds.aws_db_instance.this: Still creating... [02m30s elapsed]
+module.rds.aws_db_instance.this: Still creating... [02m40s elapsed]
+module.rds.aws_db_instance.this: Still creating... [02m50s elapsed]
+module.rds.aws_db_instance.this: Still creating... [03m00s elapsed]
+module.rds.aws_db_instance.this: Still creating... [03m10s elapsed]
+module.rds.aws_db_instance.this: Still creating... [03m20s elapsed]
+module.rds.aws_db_instance.this: Still creating... [03m30s elapsed]
+module.rds.aws_db_instance.this: Still creating... [03m40s elapsed]
+module.rds.aws_db_instance.this: Still creating... [03m50s elapsed]
+module.rds.aws_db_instance.this: Still creating... [04m00s elapsed]
+module.rds.aws_db_instance.this: Still creating... [04m10s elapsed]
+module.rds.aws_db_instance.this: Still creating... [04m20s elapsed]
+module.rds.aws_db_instance.this: Still creating... [04m30s elapsed]
+module.rds.aws_db_instance.this: Still creating... [04m40s elapsed]
+module.rds.aws_db_instance.this: Still creating... [04m50s elapsed]
+module.rds.aws_db_instance.this: Still creating... [05m00s elapsed]
+module.rds.aws_db_instance.this: Still creating... [05m10s elapsed]
+module.rds.aws_db_instance.this: Still creating... [05m20s elapsed]
+module.rds.aws_db_instance.this: Still creating... [05m30s elapsed]
+module.rds.aws_db_instance.this: Creation complete after 5m30s [id=db-OPDZ76KUTNK26NDHJEV3RNXQQA]
+module.ec2.aws_instance.this: Creating...
+module.ec2.aws_instance.this: Still creating... [00m10s elapsed]
+module.ec2.aws_instance.this: Creation complete after 15s [id=i-0b8fb15818d4f7fa3]
+
+Apply complete! Resources: 19 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+api_url = "http://44.203.78.47:3000"
+ec2_public_ip = "44.203.78.47"
+health_url = "http://44.203.78.47:3000/health"
+rds_endpoint = "technova-reservas-prova-db.c36miak0ksqa.us-east-1.rds.amazonaws.com:5432"
+ssh_command = "ssh -i labsuser.pem ec2-user@44.203.78.47"

@@ -1,307 +1,10 @@
-# Registro Completo de Prompts
+# Prompts do usuário para a IA-revisora
 
-Todos os prompts enviados pelo usuário à **IA-autora**, em ordem, com o texto **literal**
-(inclusive erros de digitação), extraídos do histórico da sessão. Os pareceres da
-**IA-revisora** aparecem aqui quando o usuário os colou como prompt para a IA-autora.
-O resumo analítico por etapa está em [`prompts.md`](prompts.md).
+As respostas da IA-revisora a cada prompt estão em
+[`../specs/revisora/spec-revisora.md`](../specs/revisora/spec-revisora.md).
 
 > **Texto literal, inclusive nomes de ferramentas; a ferramenta usada é apresentada no
-> [`relatorio.md`](../relatorio.md).**
-
-Horários em BRT (UTC−3).
-
-## Prompts do usuário para a IA-autora
-
-### P01 — 29/09/2026 17:29 · Preparação — sincronizar o fork da disciplina
-
-> sincronize esse repo com o meu local, hoje nós vamos fazer a prova
-
-### P02 — 29/09/2026 17:33 · Planejamento
-
-> vamos começar, vamos no baseiar em spec driven, vamos criar um plano de ação e executar as tarefas uma por uma, solicito que você crie uma tabela de recomendações para cada etapa do projeto, para eu ler, pesquisar e questionar antes de qualquer execução. leia as regras da prova, readme.md
-
-### P03 — 29/09/2026 17:36 · Planejamento
-
-> também pede todos os prompts?
-
-### P04 — 29/09/2026 17:39 · Planejamento — decisões
-
-> pode versionar, status ok, specs/, cita a ferramenta só no relatório, e não acrescente coauditoria claude nos commits
-
-### P05 — 29/09/2026 17:42 · Planejamento — data do PR
-
-> PR vai ser feito apenas no dia da aula dia 1/10, quinta feira, é proibido qualquer PR antes desse dia
-
-### P06 — 29/09/2026 17:52 · Spec — requisitos (revisão)
-
-_Parecer da IA-revisora, colado pelo usuário:_
-
-> Revisão da Tarefa 1 (specs/requirements.md): APROVADA com 1 ajuste.
->
-> Decisões confirmadas: DELETE 204 sem corpo; id inválido → 404; data AAAA-MM-DD; PUT com campos completos.
->
-> Ajuste obrigatório:
-> - Reescrever o critério 1.6 para: "QUANDO receber PUT /reservas/:id com cliente e data válidos (status opcional; se omitido, mantém o valor atual) ENTÃO DEVE atualizar no banco e responder 200 com a reserva atualizada."
->
-> Anotar para o design.md (não mexer no requirements):
-> - Validar que :id é inteiro positivo ANTES de consultar o banco (senão o Postgres dá erro 500 em /reservas/abc).
-> - Configurar pg.types.setTypeParser(1082, v => v) para o DATE voltar como string AAAA-MM-DD, sem deslocamento de fuso.
->
-> prompts.md linha 2: deixar a coluna Revisão para o usuário preencher.
-
-### P07 — 29/09/2026 17:57 · Spec — design (revisão)
-
-_Parecer da IA-revisora, colado pelo usuário:_
-
-> Revisão da Tarefa 2 (specs/design.md): APROVADA com 1 ajuste.
->
-> Decisões 1 a 10: todas confirmadas como estão.
->
-> Ajuste obrigatório:
-> - Seção 4 (Compose): declarar healthcheck explícito no serviço api,
->   usando wget em http://localhost:3000/health. O enunciado diz que o
->   /health é "usado pelo healthcheck do Compose" (R3.2), e o HEALTHCHECK
->   herdado do Dockerfile não fica visível no docker-compose.yml, que é o
->   arquivo que o avaliador lê.
->
-> Pontos de atenção (incluir no design, sem mudar decisões):
-> - 5.6 user_data: não usar "set -x", porque ecoaria a senha do banco
->   em /var/log/cloud-init-output.log. Acrescentar ao trade-off da decisão 3
->   que a senha também fica no tfstate (mitigado pelo S3 com SSE e acesso
->   privado).
-> - 5.3/5.6: garantir IP público na EC2 (map_public_ip_on_launch = true
->   nas subnets públicas do módulo vpc, ou associate_public_ip_address = true
->   na instância). Conferir no módulo reaproveitado da Aula 06.
-> - 5.2: remover a menção a "terraform untaint". Não se aplica a esse erro
->   de leitura. Deixar só: se o refresh do bucket falhar pela SCP, usar
->   -refresh=false e conferir o bucket via aws s3api.
->
-> Dependência de ordem: sem objeção técnica a criar o repo público e dar
-> push antes do apply. O usuário autoriza quando chegar na infra (o PR na
-> disciplina continua só em 01/10).
-
-### P08 — 29/09/2026 18:01 · Spec — tarefas (revisão)
-
-> veja se faz sentido:
-
-_Parecer da IA-revisora, colado pelo usuário:_
-
-> Li o tasks.md e conferi que os ajustes do design entraram. Sobre o Docker: ele já responde no WSL (Docker Engine 29.5.3), então a T2 pode ser testada direto. Sobre o backend na T11, recomendo manter até o PR de quinta e destruir depois. A professora não teria como usar seu bucket de qualquer forma, porque ele está na conta do seu Lab.
->
-> Revisão da Tarefa 3 (specs/tasks.md): APROVADA com 3 ajustes.
-> Pontos 1, 2 e 4: confirmados (.terraform.lock.hcl versionado; *.tfvars
-> ignorado com *.tfvars.example versionado; ~16 commits + 5 merges).
-> Ponto 3: manter o backend até depois do PR de 01/10 (se precisar refazer
-> alguma evidência, o state está lá); destruir depois da entrega. Registrar
-> isso na T11.
-> Ajustes obrigatórios:
-> 1. T1: a pasta specs/ não é commitada em nenhuma tarefa, mas R9.1 exige
->    o fluxo Spec-Driven versionado. Incluir na T1 um commit separado:
->    "docs: adiciona especificação spec-driven (requisitos, design e tarefas)"
->    com specs/requirements.md, design.md, tasks.md e prompts.md.
-> 2. T5: "gh repo create --push" envia só a branch atual. Para o critério
->    "git ls-remote mostra main e as branches", acrescentar
->    "git push --all origin" (ou trocar o critério para: o grafo com os
->    merges --no-ff aparece no main do GitHub).
-> 3. T12: o enunciado diz que o PR leva "entrega.md com link do repositório
->    + evidências". Incluir no entrega.md a seção Evidências preenchida
->    (trechos do docker compose ps, terraform plan e smoke test na AWS,
->    ou links diretos para os arquivos em evidencias/ no repo).
-> Pré-requisito da T2: Docker já está ativo no WSL, pode testar com o
-> Postgres temporário.
-
-### P09 — 29/09/2026 18:04 · Processo de trabalho
-
-> vou explicar o meu fluxo, existe outro painel conectado no projeto, é outro agente, eu mando a sua decisão e recomendações para ele avaliar e mando a resposta dele para você, nessa prova, existem partes para relatar erros que a IA cometem durante a produção?
-
-### P10 — 29/09/2026 18:06 · Processo de trabalho — registro de erros
-
-> pode criar a tabela, use IA-autora e IA-revisora, como fazer para relatar os erros dele comos seus? o seus você relata, e ele?
-
-### P11 — 29/09/2026 18:08 · Spec — tarefas (resposta à contestação E6)
-
-> primeiro dela
-
-_Parecer da IA-revisora, colado pelo usuário:_
-
-> Confirmado, o erro foi meu. Quando li o repo pela primeira vez ainda não havia commits, e não conferi de novo. O git log mostra a4d3392 (requisitos) e aed04ad (design) no main, e o tasks.md está sem commit.
->
-> Ajuste 1 da revisão da Tarefa 3: SUBSTITUÍDO.
-> Aprovada a proposta: um commit por fase da spec.
-> - Fase 0 (retroativa) no tasks.md, marcada [x]: requisitos (a4d3392) e
->   design (aed04ad).
-> - Commit desta fase: "docs: adiciona tarefas da spec da API de Reservas"
->   com specs/tasks.md + specs/prompts.md.
-> Ajustes 2 e 3 continuam valendo. Pode aplicar e commitar.
-
-### P12 — 29/09/2026 18:14 · Registro de prompts — coluna Revisão
-
-> antes disso,a revisadora me informou sobre isso: Ela fica em specs/prompts.md, na primeira tabela ("Registro de Prompts"). É a última coluna, chamada "Revisão / correção / questionamento" (linha 7 do arquivo). As linhas 10 a 13, que correspondem aos prompts 2 (requisitos), 3 (design), 4 (tarefas) e 5 (T1), ainda estão com "(preencher após a revisão)" nessa coluna.
->
-> Cada célula é para uma frase curta sobre o que você revisou ou mudou naquela etapa. Na linha 2 (requisitos), por exemplo: "Confirmei DELETE 204, id inválido 404, data AAAA-MM-DD e PUT completo; pedi para explicitar no 1.6 que status omitido mantém o atual."
-
-### P13 — 29/09/2026 18:15 · Processo de trabalho
-
-> a tomada de decisão em usar dois agentes entre em algum lugar?
-
-### P14 — 29/09/2026 18:17 · T1 — README e .gitignore
-
-> pode mover e ajustar o README, e usar os rascunhos, e eu peço que você me avise quando chegar em etapas de reflexoês minhas.
-
-### P15 — 29/09/2026 18:32 · T1 (commit) → T2 — API; reflexão do usuário
-
-> pode commitar a T1 e seguir para a T2, e aqui está aminha primeira reflexão Decidi usar dois agentes com funções diferentes para gerar questionamentos e ajustes nas tomadas de decisão antes da execução. A IA responsável pela execução cria a tabela de recomendações. A IA revisora lê essa tabela e, só depois de checar o estado atual do projeto, apresenta a sua análise. Eu leio, tiro as dúvidas que tiver e envio a análise para a IA que executa, que a confere com o estado do projeto, contesta se discordar e segue o fluxo de trabalho. A decisão final é sempre minha. Escolhi esse fluxo para facilitar a minha compreensão das decisões por meio dos conceitos técnicos trabalhados.
-
-### P16 — 29/09/2026 18:49 · Registro de prompts completo
-
-> antes de commitar a T2 e fazer o merge, o professor solicitou que deixasse todos os prompts usados aqui em um documento para ele, como você está relatando os nossos avanços?
-
-### P17 — 29/09/2026 18:52 · Registro de prompts completo — decisões
-
-> no repositório, só os prompts, deixa a seção da revisora, vou mande um plano para ela mandar para a revisadora sobre essa decisão.
-
-### P18 — 29/09/2026 18:56 · Registro de prompts completo — opção A (literal) e commit docs: separado
-
-> opção A, pode manter literal o prompts-completos.md pode entrar num commit docs: separado
-
-### P19 — 29/09/2026 18:58 · Registro de prompts completo — revisão do plano; T2 — pool.on('error')
-
-_Parecer da IA-revisora, colado pelo usuário:_
-
-> Revisão do plano "registro completo de prompts": APROVADO com 3 ajustes.
->
-> Decisões 1 a 6: confirmadas. E9 de acordo (paráfrase entre aspas
-> parecia citação).
-> Ponto em aberto (P04): Opção A, manter literal. Um registro "literal"
-> editado deixa de ser literal. Acrescentar no topo do arquivo uma nota:
-> "texto literal, inclusive nomes de ferramentas; a ferramenta usada é
-> apresentada no relatorio.md".
->
-> Ajustes obrigatórios:
-> 1. Ordem: a T2 NÃO pode ser commitada ainda. O ajuste obrigatório da
->    revisão da T2 (pool.on('error') no src/db.js) não está aplicado;
->    conferido com grep no estado atual. Aplicar e testar antes do commit.
-> 2. Commits: não colocar specs/ no commit feat:. Fazer um commit à parte,
->    antes do merge:
->    "docs: adiciona registro completo de prompts e atualiza spec da T2"
->    com prompts-completos.md, prompts.md e tasks.md.
-> 3. Script gerador: não versionar no repo da prova. Ele lê o histórico
->    local da sessão (caminho da máquina e da ferramenta). No topo do
->    prompts-completos.md basta dizer "extraído do histórico da sessão".
->
-> Seção "Prompts do usuário para a IA-revisora": preencher com o arquivo
-> prompts-revisora.md que o usuário vai fornecer (R01–R17, literal, BRT),
-> seguindo a mesma regra: só os prompts do usuário.
->
-> Erros meus reconhecidos:
-> - E10 (IA-revisora): no parecer da T3 (P08) escrevi "A professora não
->   teria como usar seu bucket", mas o enunciado identifica o professor
->   Alexandre da Costa Tavares Jr. Verificado em provas/prova-primeiro-
->   bimestre.md. Sem impacto em código; registrar e manter o P08 literal.
-
-### P20 — 29/09/2026 19:02 · T2 — parecer do código (repassado após a contestação E11)
-
-> resposta da revisora:
-
-_Parecer da IA-revisora, colado pelo usuário:_
-
-> Resposta à contestação E11: o parecer do código da T2 EXISTE.
-> Emitido pela IA-revisora em 29/09 18:52 BRT; não foi repassado.
-> Registrar no E11: falha de repasse entre painéis, sem erro de conteúdo
-> de nenhuma das IAs. Colar no prompts-completos.md como prompt literal.
->
-> Conteúdo do parecer (literal), além do pool.on('error') já aplicado:
-> - Pontos 1, 2 e 3 confirmados (/health sem SELECT 1; POST sem
->   Content-Type → 400; commits ok, com specs/ em commit docs: separado).
-> - Opcional (src/app.js): o handler só trata entity.parse.failed; corpo
->   acima de 100 kb (entity.too.large → 413) cai em 500. Trocar por:
->     if (err.type && err.status && err.status < 500) {
->       return res.status(err.status).json({ erro: 'Requisição inválida' });
->     }
->   mantendo a mensagem específica para JSON malformado.
-> - E8 (pkill): de acordo com o registro.
->
-> Decisão sobre o opcional: aplicar antes do commit 3 (é pequeno e evita
-> um fix: depois). Se o usuário preferir não aplicar, a T2 está aprovada
-> do mesmo jeito.
->
-> Commits 1 a 4 + merge --no-ff: APROVADOS. Pode fechar a T2 depois de
-> substituir a seção da revisora pelo prompts-revisora.md (R01–R20).
-
-### P21 — 29/09/2026 19:05 · T2 — prompts-revisora.md (R01–R21); commit 4 e merge aprovados → T3 — Dockerfile
-
-_Parecer da IA-revisora, colado pelo usuário:_
-
-> prompts-revisora.md: /home/sirla/faculdade/projeto_ale/prompts-revisora.md
-> (R01–R21). A numeração cresce a cada mensagem do usuário à revisora;
-> R17 e R20 eram as versões corretas quando foram geradas. Usar sempre o
-> arquivo mais recente e substituir a seção inteira. Não copiar o arquivo
-> para a raiz do repo; só o conteúdo entra em specs/prompts-completos.md.
->
-> T2: commits 1–3 conferidos (f81cc10, 36427eb, b22a847), specs/ fora
-> deles. Commit 4 (docs:) e merge --no-ff feat/api: aprovados.
-
-### P22 — 29/09/2026 19:08 · T3 — revisão (endurecer a imagem; aviso de senha mascarada) → T4
-
-> resposta da revisora:
-
-_Parecer da IA-revisora, colado pelo usuário:_
-
-> Revisão da T3 (Dockerfile, branch feat/docker): APROVADA com 2 ajustes.
->
-> Ponto 1 (tamanho 244 MB × 62 MB): aprovado registrar os dois números
-> sem conclusão além da diferença de contagem do image store.
->
-> Ponto 2 (dono dos arquivos): ENDURECER.
-> - Tirar o --chown=node:node das 3 linhas COPY. O código fica com dono
->   root e modo 644/755 (leitura para o node), e o processo continua
->   rodando como USER node. Se a API for comprometida, ela não consegue
->   reescrever o próprio código. A API não grava em disco, então nada
->   quebra.
-> - Atualizar o design (seção 3) com o motivo e refazer a parte de
->   execução da evidência: o "ls -la /app" deve mostrar root:root e
->   o whoami continua node. Bom exemplo de menor privilégio para a
->   Questão 4, junto com os SGs.
->
-> Ponto 3 (dois commits, feat: + docs:, depois merge --no-ff): aprovado.
->
-> Ajuste de evidência:
-> - A linha do docker run mostra DB_PASSWORD=***, mas o arquivo não diz
->   que a senha foi mascarada, e parece que o comando rodou assim.
->   Acrescentar no cabeçalho: "# DB_PASSWORD substituída por *** nesta
->   evidência; a senha real não é registrada."
-
-### P23 — 29/09/2026 19:15 · T4 — revisão (timeout no smoke test; nota para a T9)
-
-> resposta da revisora, veja se faz sentido:
-
-_Parecer da IA-revisora, colado pelo usuário:_
-
-> Revisão da T4 (Compose, branch feat/compose): APROVADA com 1 ajuste.
->
-> docker-compose.yml: aprovado como está (volume pgdata, rede bridge,
-> healthcheck do db e da api, depends_on service_healthy, banco sem porta
-> no host, senha obrigatória com :?). .env ignorado (conferido com
-> git check-ignore); senha real ausente de evidencias/, README, specs/,
-> scripts/ e .env.example (conferido).
-> E13: de acordo.
-> Commits 1–3 + merge --no-ff: aprovados.
->
-> Ajuste obrigatório (scripts/smoke-test.sh):
-> - curl sem timeout. Na AWS, se a EC2 ainda não subiu a API ou o SG
->   estiver errado, cada caso pode travar por minutos. Acrescentar
->   --connect-timeout 5 --max-time 15 no curl da função checa. Falha de
->   conexão já vira status 000 e conta como FALHA.
->
-> Anotar para a T9 (não mexer agora):
-> - O smoke test apaga a reserva que cria, então no fim o RDS fica vazio.
->   Para provar o R7.5 (dados gravados no RDS), depois do smoke test na
->   AWS fazer um POST que fica gravado + GET /reservas, e registrar em
->   curl-aws.txt.
->
-> prompts-revisora.md atualizado: R01–R23, mesmo caminho.
-
-## Prompts do usuário para a IA-revisora
+> [`relatorio.md`](../../relatorio.md).**
 
 
 _Texto literal das mensagens do usuário no painel da IA-revisora, em ordem. Horários em BRT (UTC−3)._
@@ -764,3 +467,191 @@ _Texto literal das mensagens do usuário no painel da IA-revisora, em ordem. Hor
 > Depois vem o merge --no-ff feat/compose.
 >
 > ⚠️ A próxima tarefa, T5, precisa da sua autorização explícita: ela cria o repositório público Sir-Jr/prova-primeiro-bimestre-devops no GitHub e envia tudo (push --all). A partir daí o código fica público. Antes do push vou mostrar o git ls-files para você conferir que não há nada proibido. Na volta com o parecer da T4, diga também se autoriza a T5. Lembre ainda de reexportar o prompts-revisora.md.
+
+### R24 — 29/09/2026 19:22
+
+> eu pedi para a IA executadora salvar na memória o progresso: Salvei o progresso em prova-1bi-progresso.md e atualizei a linha correspondente no índice da memória.
+>
+> O arquivo é compartilhado com a IA-revisora. Os dois painéis leem a mesma pasta de memória, e ela também tinha escrito nele. Por isso o texto misturava instruções dos dois papéis. Uma linha dela dizia "sou o agente de decisão/revisão, não edito o repo", e numa sessão futura eu poderia ler isso como se fosse sobre mim e parar de executar.
+>
+> Reorganizei o arquivo sem apagar nada do que ela registrou:
+>
+> ┌───────────────────┬───────────────────────────────────────────────────────────────────────────┐
+> │       Seção       │                                 O que tem                                 │
+> ├───────────────────┼───────────────────────────────────────────────────────────────────────────┤
+> │ Comum: prazo,     │ PR só em 01/10, link do repositório, decisões de API, regra da ferramenta │
+> │ repo, decisões    │  de IA, fluxo de revisão, backend mantido até depois do PR                │
+> ├───────────────────┼───────────────────────────────────────────────────────────────────────────┤
+> │ Comum: estado das │ Tabela da T0 à T12 com os hashes dos commits. As tarefas T0 a T5 estão    │
+> │  tarefas          │ concluídas, a T6 está bloqueada pelas credenciais do Lab e as notas para  │
+> │                   │ a T9 estão incluídas                                                      │
+> ├───────────────────┼───────────────────────────────────────────────────────────────────────────┤
+> │ Reflexão do       │ O seu texto sobre os dois agentes, literal. Acrescentei o complemento que │
+> │ usuário           │  você mandou para a revisora no R11, sobre o custo em tokens do modelo    │
+> │                   │ dela                                                                      │
+> ├───────────────────┼───────────────────────────────────────────────────────────────────────────┤
+> │ Para a IA-autora  │ A minha rotina de fechamento de tarefa, como regenerar o registro de      │
+> │                   │ prompts e a regra de mascarar senha nas evidências                        │
+> ├───────────────────┼───────────────────────────────────────────────────────────────────────────┤
+> │ Para a            │ O papel dela (não executa nada, só dá parecer depois de verificar), a     │
+> │ IA-revisora       │ convenção do "2", o export de prompts e os erros que ela já reconheceu    │
+> └───────────────────┴───────────────────────────────────────────────────────────────────────────┘
+>
+> Também tirei uma nota que estava desatualizada: "coluna Revisão preenchida só pelo usuário". A prática que você aprovou é eu rascunhar o texto factual e você revisar.
+>
+> Vale avisar a revisora da reorganização, para ela saber que agora tem uma seção própria. Quando as credenciais do Lab estiverem atualizadas, começo a T6.
+
+### R25 — 29/09/2026 19:26
+
+> notas da outra IA:
+> Conferi e está confirmado. As linhas 97 e 98 da sua entrega da Aula 05 registram que o recurso fica tainted e que o contorno foi head-bucket, depois untaint, depois apply -refresh=false -target=…. Apliquei tudo antes de começar a T6:
+>
+> ┌───────────────────┬───────────────────────────────────────────────────────────────────────────┐
+> │       Onde        │                                O que mudou                                │
+> ├───────────────────┼───────────────────────────────────────────────────────────────────────────┤
+> │ specs/design.md   │ O contorno completo voltou em 5 passos: head-bucket, untaint, apply       │
+> │ 5.2               │ -refresh=false -target=…, conferência via aws s3api e destroy com plan    │
+> │                   │ -destroy -refresh=false                                                   │
+> ├───────────────────┼───────────────────────────────────────────────────────────────────────────┤
+> │ specs/tasks.md T6 │ O critério de pronto agora prevê o caso tainted com o untaint             │
+> ├───────────────────┼───────────────────────────────────────────────────────────────────────────┤
+> │ specs/prompts.md  │ De quem: IA-revisora. Quem detectou: IA-autora. Status: confirmado pela   │
+> │ E7                │ IA-revisora, com o parecer das ~18:12 que também não foi repassado, a     │
+> │                   │ mesma falha do E11. O untaint foi restaurado                              │
+> └───────────────────┴───────────────────────────────────────────────────────────────────────────┘
+>
+> Criei a branch feat/infra, e essas mudanças estão nela junto com a marcação da T5. Ainda sem commit: elas entram no commit docs: da T6.
+>
+> Com esta, já são duas falhas de repasse entre os painéis (E7 e E11). Sugiro pedir à revisora que termine cada parecer com uma linha do tipo "Pareceres emitidos desde o último repasse: …". Assim, se algum ficar para trás, ele aparece logo.
+
+### R26 — 29/09/2026 19:41
+
+> 2 - o lab da AWS deu falha por hora, enquanto isso solicitei que a executora adiantasse as próximas etapas: O código da T6 está pronto e validado sem a AWS, na branch feat/infra. Ainda sem commit. Último parecer recebido: V01.
+>
+> infra/backend/:
+>
+> ┌─────────────────────┬──────────────────────────────────────────────────────────────────────────┐
+> │       Arquivo       │                                 Conteúdo                                 │
+> ├─────────────────────┼──────────────────────────────────────────────────────────────────────────┤
+> │                     │ Terraform >= 1.5, provider AWS ~> 5.0 (instalou a v5.100.0, a mesma da   │
+> │ providers.tf        │ Aula 05) e default_tags: Project, Environment=prova, ManagedBy,          │
+> │                     │ Owner=6325269, Purpose                                                   │
+> ├─────────────────────┼──────────────────────────────────────────────────────────────────────────┤
+> │ variables.tf        │ A região tem uma validation que só aceita us-east-1 (C1). Bucket         │
+> │                     │ technova-reservas-tfstate-6325269 e tabela technova-reservas-tf-lock     │
+> ├─────────────────────┼──────────────────────────────────────────────────────────────────────────┤
+> │ main.tf             │ Bucket S3, versionamento Enabled, SSE AES256, os 4 bloqueios de acesso   │
+> │                     │ público e DynamoDB LockID (S) PAY_PER_REQUEST                            │
+> ├─────────────────────┼──────────────────────────────────────────────────────────────────────────┤
+> │ outputs.tf          │ Nome e ARN do bucket, nome da tabela                                     │
+> ├─────────────────────┼──────────────────────────────────────────────────────────────────────────┤
+> │ .terraform.lock.hcl │ Versionado, fixa o provider em v5.100.0                                  │
+> └─────────────────────┴──────────────────────────────────────────────────────────────────────────┘
+>
+> Validação: terraform fmt -check ok, init -backend=false ok, validate com Success. O .terraform/ e o terraform.tfstate do backend estão ignorados.
+>
+> Dois pontos para a revisão:
+> 1. Criptografia AES256 (SSE-S3) em vez da aws:kms da Aula 05. Segui o design. As duas protegem o state em repouso, e a SSE-S3 é mais simples porque não depende de permissão em chave KMS dentro do Lab. Se preferir a aws:kms da Aula 05, é uma linha.
+> 2. Sem force_destroy no bucket. Com isso, o destroy falha enquanto houver versões do state no bucket, o que protege contra apagar sem querer. O custo é que a limpeza depois do PR exige esvaziar o bucket antes, e isso já está anotado na T11.
+>
+> O que fica para quando o Lab voltar:
+> 1. Atualizar as credenciais com o script e confirmar com aws sts.
+> 2. Rodar terraform plan e mostrar para você antes do apply.
+> 3. Rodar terraform apply. Se a SCP deixar o bucket tainted, aplico o contorno restaurado no D5.2.
+> 4. Conferir via aws s3api e aws dynamodb describe-table.
+>
+> Commits propostos: o código agora, depois da revisão, como feat: adiciona backend S3 e DynamoDB para remote state. A evidência do apply fica para depois, num docs: com a spec.
+>
+> Enquanto o Lab estiver fora, também dá para adiantar o código da T7 (os módulos) e da T8 (composição + validate) sem AWS. Só o plan depende do Lab.
+
+### R27 — 29/09/2026 19:47
+
+> 2 - A T7 está pronta para revisão, na branch feat/infra. Ainda sem commit. Último parecer recebido: V02.
+>
+> infra/modules/: a cópia dos 4 módulos da Aula 06 foi conferida com diff e estava idêntica antes dos ajustes. O diff final contém só estes ajustes:
+>
+> Módulo: ec2
+> Ajuste: Nova variável iam_instance_profile, padrão null
+> Motivo: Receber o LabInstanceProfile já existente. O módulo não cria IAM (C3)
+> ────────────────────────────────────────
+> Módulo: ec2
+> Ajuste: key_name passa a ser opcional, padrão null
+> Motivo: No Lab o valor é vockey, mas o módulo não obriga
+> ────────────────────────────────────────
+> Módulo: ec2
+> Ajuste: user_data_replace_on_change = true
+> Motivo: Fora do design original. O cloud-init só roda no primeiro boot. Sem essa opção, uma correção
+> no user_data durante a T9 não teria efeito, porque a instância seria só atualizada, sem rodar o
+> script de novo
+> ────────────────────────────────────────
+> Módulo: rds
+> Ajuste: engine_version padrão "16"
+> Motivo: A mesma versão do Compose (decisão 4)
+> ────────────────────────────────────────
+> Módulo: rds
+> Ajuste: validation na senha: só letras e números, de 8 a 128 caracteres
+> Motivo: Fora do design original, mas o design já dizia "só alfanumérica". Agora uma senha inválida é
+> recusada já no plan, e não no meio do apply
+>
+> Validação: terraform fmt -check ok, validate com Success nos 4 módulos e nenhum aws_iam_* em infra/.
+>
+> Ajuste no registro de prompts: os comandos que você roda com ! passam a aparecer como "Comando executado pelo usuário no terminal", e as saídas desses comandos saem do registro, porque não são prompts. Ficou P01 a P31.
+>
+> Dois pontos para a revisão:
+> 1. Commits: proponho dois, em vez do único que o tasks.md prevê:
+>    - feat: reaproveita módulos vpc, security-group, ec2 e rds da Aula 06, com a cópia sem alteração
+>    - feat: adapta módulos ec2 e rds ao Learner Lab, com os 5 ajustes acima
+>
+>    Assim o histórico mostra o reaproveitamento e a evolução, o que ajuda na Questão 1, onde cada aula aparece na solução.
+> 2. Uma sugestão, não aplicada: forçar IMDSv2 na EC2 com metadata_options { http_tokens = "required" }. Isso protege as credenciais do LabInstanceProfile contra ataques de SSRF. A AMI Amazon Linux 2023 já vem com IMDSv2 por padrão, mas deixar explícito no código documenta a decisão. É uma linha. Aplico?
+>
+> Depois da revisão, sigo para o código da T8: providers.tf com o backend, variables.tf, main.tf, o template do user_data e outputs.tf, validado com init -backend=false.
+
+### R28 — 29/09/2026 19:56
+
+> 2 - O código da T8 está pronto e validado sem a AWS, na branch feat/infra. Ainda sem commit. Último parecer recebido: V03.
+>
+> Arquivos em infra/:
+>
+> ┌──────────────────────────────┬─────────────────────────────────────────────────────────────────┐
+> │           Arquivo            │                            Conteúdo                             │
+> ├──────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+> │                              │ backend "s3" com o bucket technova-reservas-tfstate-6325269, a  │
+> │ providers.tf                 │ chave prova/terraform.tfstate, encrypt = true e dynamodb_table. │
+> │                              │  Também tem as default_tags                                     │
+> ├──────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+> │                              │ A região só aceita us-east-1. O ssh_allowed_cidr não tem padrão │
+> │ variables.tf                 │  e só aceita /32. A db_password é sensitive e sem padrão. O     │
+> │                              │ LabInstanceProfile e a chave vockey são padrões. Também estão   │
+> │                              │ aqui o repo_url e a branch                                      │
+> ├──────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+> │                              │ AMI AL2023 buscada por filtro, e a composição vpc → sg_ec2 →    │
+> │ main.tf                      │ sg_rds → rds → ec2. O user_data recebe module.rds.db_address,   │
+> │                              │ então o RDS é criado antes da EC2                               │
+> ├──────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+> │                              │ Instala Docker e Git, baixa o CA bundle do RDS, clona o         │
+> │ templates/user_data.sh.tftpl │ repositório e faz o build. As variáveis vão para um api.env com │
+> │                              │  modo 600, e o container sobe com --env-file. Não usa set -x    │
+> ├──────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+> │ outputs.tf                   │ ec2_public_ip, rds_endpoint, api_url, health_url, ssh_command   │
+> ├──────────────────────────────┼─────────────────────────────────────────────────────────────────┤
+> │ terraform.tfvars.example     │ Placeholders para o IP /32 e a senha. O arquivo real fica fora  │
+> │                              │ do Git                                                          │
+> └──────────────────────────────┴─────────────────────────────────────────────────────────────────┘
+>
+> Validação sem a AWS: fmt ok, validate com Success e nenhum aws_iam_*. Também renderizei o template e testei as validações (tabela acima).
+>
+> Registrei um erro meu (E14): o primeiro teste deu falso positivo, porque o bash -n passou num arquivo vazio. Refiz o teste do jeito certo. É um bom exemplo para a Questão 4: um teste que "passa" também precisa ser conferido.
+>
+> Três pontos para a revisão:
+> 1. Uma mudança em relação ao design: a senha vai por --env-file, num arquivo com modo 600, e não por -e DB_PASSWORD= no docker run. Com isso ela sai da lista de processos (ps). Ela ainda aparece no docker inspect, no user_data e no tfstate, que é o trade-off já registrado. Atualizei o design D5.6.
+> 2. Aviso esperado no init: no Terraform 1.16, o parâmetro dynamodb_table do backend S3 está deprecated em favor do use_lockfile, e vai aparecer um warning no init. Mantenho o dynamodb_table porque o enunciado exige DynamoDB para o locking. Vale citar na Questão 3.
+> 3. Commits propostos:
+>    - feat: adiciona composição dos módulos da infraestrutura: os arquivos de infra/, fora o backend e os módulos
+>    - docs: atualiza spec das tarefas T5 a T8: specs/, com a T5, o E7, a nota da T11, T7, T8, E14 e o prompts-completos.md regenerado
+>
+> O que não dá para testar sem o Lab: o user_data na EC2 real e a conexão TLS com o RDS. Isso fica para a T9. O plan passa pela revisora antes do apply, como ela pediu no V02.
+
+### R29 — 29/09/2026 20:00
+
+> 2 - faça um novo export do prompts-revisora.md

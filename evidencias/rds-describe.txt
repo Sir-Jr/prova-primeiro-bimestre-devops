@@ -1,0 +1,45 @@
+# Evidência da T9 — RDS privado e encriptado + state remoto no S3 (versionado, SSE) e lock no DynamoDB, 30/09/2026
+# Dados sensíveis mascarados com ***: ID da conta AWS e IP público do administrador (regra SSH /32). A senha do RDS
+# nunca aparece: o Terraform a exibe como (sensitive value). Fora isso, saídas reais, sem edição.
+
+$ aws rds describe-db-instances --db-instance-identifier technova-reservas-prova-db --query 'DBInstances[0].{...}'
+{
+    "Id": "technova-reservas-prova-db",
+    "Status": "available",
+    "Engine": "postgres",
+    "Version": "16.13",
+    "Class": "db.t3.micro",
+    "PubliclyAccessible": false,
+    "StorageEncrypted": true,
+    "MultiAZ": false,
+    "Endpoint": "technova-reservas-prova-db.c36miak0ksqa.us-east-1.rds.amazonaws.com",
+    "Port": 5432,
+    "SubnetGroup": "technova-reservas-prova-db-subnet-group",
+    "Subnets": [
+        "us-east-1b",
+        "us-east-1a"
+    ],
+    "SecurityGroups": [
+        "sg-0e7dcf13c3c34f7af"
+    ]
+}
+
+$ aws s3 ls s3://technova-reservas-tfstate-6325269 --recursive
+2026-09-30 13:19:44      43149 prova/terraform.tfstate
+$ aws s3api list-object-versions --bucket technova-reservas-tfstate-6325269 --query 'Versions[].{Key:Key,Latest:IsLatest,Modificado:LastModified}'
+--------------------------------------------------------------------
+|                        ListObjectVersions                        |
++--------------------------+---------+-----------------------------+
+|            Key           | Latest  |         Modificado          |
++--------------------------+---------+-----------------------------+
+|  prova/terraform.tfstate |  True   |  2026-09-30T16:19:44+00:00  |
+|  prova/terraform.tfstate |  False  |  2026-09-30T16:19:29+00:00  |
++--------------------------+---------+-----------------------------+
+$ aws s3api head-object --bucket technova-reservas-tfstate-6325269 --key prova/terraform.tfstate --query ServerSideEncryption
+AES256
+$ aws dynamodb scan --table-name technova-reservas-tf-lock --query 'Items[].LockID.S'   # sem lock ativo: só o digest do state
+[
+    {
+        "LockID": "technova-reservas-tfstate-6325269/prova/terraform.tfstate-md5"
+    }
+]

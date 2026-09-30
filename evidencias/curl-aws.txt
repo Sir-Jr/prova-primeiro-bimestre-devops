@@ -1,0 +1,55 @@
+# Evidência da T9 — API de Reservas na EC2, gravando no RDS (smoke test + reserva que fica gravada, R7.5), 30/09/2026
+# Dados sensíveis mascarados com ***: ID da conta AWS e IP público do administrador (regra SSH /32). A senha do RDS
+# nunca aparece: o Terraform a exibe como (sensitive value). Fora isso, saídas reais, sem edição.
+
+$ scripts/smoke-test.sh http://44.203.78.47:3000
+Smoke test — http://44.203.78.47:3000 — 30/09/2026 13:23:04 -03
+
+OK    GET /health                                           200
+      {"status":"ok"}
+OK    POST /reservas (válida, sem status)                   201
+      {"id":1,"cliente":"Ana Souza","data":"2026-10-01","status":"pendente","criado_em":"2026-09-30T16:23:04.804Z"}
+      (id criado: 1)
+OK    POST /reservas (sem campos obrigatórios)              400
+      {"erro":"Dados inválidos","detalhes":["cliente é obrigatório e deve ser um texto não vazio","data é obrigatória e deve ser uma data válida no formato AAAA-MM-DD"]}
+OK    POST /reservas (data inexistente 2026-02-30)          400
+      {"erro":"Dados inválidos","detalhes":["data é obrigatória e deve ser uma data válida no formato AAAA-MM-DD"]}
+OK    POST /reservas (status inválido)                      400
+      {"erro":"Dados inválidos","detalhes":["status deve ser um de: pendente, confirmada, cancelada"]}
+OK    POST /reservas (sem Content-Type JSON)                400
+      {"erro":"Dados inválidos","detalhes":["cliente é obrigatório e deve ser um texto não vazio","data é obrigatória e deve ser uma data válida no formato AAAA-MM-DD"]}
+OK    GET /reservas (lista)                                 200
+      [{"id":1,"cliente":"Ana Souza","data":"2026-10-01","status":"pendente","criado_em":"2026-09-30T16:23:04.804Z"}]
+OK    GET /reservas/1                                       200
+      {"id":1,"cliente":"Ana Souza","data":"2026-10-01","status":"pendente","criado_em":"2026-09-30T16:23:04.804Z"}
+OK    GET /reservas/abc (id inválido)                       404
+      {"erro":"Reserva não encontrada"}
+OK    GET /reservas/2147483647 (inexistente)                404
+      {"erro":"Reserva não encontrada"}
+OK    PUT /reservas/1 (sem status: mantém o atual)          200
+      {"id":1,"cliente":"Ana Souza","data":"2026-10-02","status":"pendente","criado_em":"2026-09-30T16:23:04.804Z"}
+OK    PUT /reservas/1 (status confirmada)                   200
+      {"id":1,"cliente":"Ana Souza","data":"2026-10-02","status":"confirmada","criado_em":"2026-09-30T16:23:04.804Z"}
+OK    PUT /reservas/1 (sem data)                            400
+      {"erro":"Dados inválidos","detalhes":["data é obrigatória e deve ser uma data válida no formato AAAA-MM-DD"]}
+OK    PUT /reservas/2147483647 (inexistente)                404
+      {"erro":"Reserva não encontrada"}
+OK    DELETE /reservas/1                                    204
+OK    GET /reservas/1 (após DELETE)                         404
+      {"erro":"Reserva não encontrada"}
+OK    DELETE /reservas/1 (de novo)                          404
+      {"erro":"Reserva não encontrada"}
+
+Resultado: 17/17 casos OK
+exit: 0
+
+# Reserva que fica gravada no RDS (R7.5) — o smoke test apaga a que cria
+$ curl -s -X POST http://44.203.78.47:3000/reservas -H 'Content-Type: application/json' -d '{"cliente":"Sirlande Martins","data":"2026-10-01"}'
+{"id":2,"cliente":"Sirlande Martins","data":"2026-10-01","status":"pendente","criado_em":"2026-09-30T16:23:09.480Z"}
+HTTP 201
+$ curl -s http://44.203.78.47:3000/reservas
+[{"id":2,"cliente":"Sirlande Martins","data":"2026-10-01","status":"pendente","criado_em":"2026-09-30T16:23:09.480Z"}]
+HTTP 200
+$ curl -s http://44.203.78.47:3000/health
+{"status":"ok"}
+HTTP 200

@@ -17,8 +17,13 @@
 - [x] `specs/tasks.md` + `specs/prompts.md` → `docs: adiciona tarefas da spec da API de Reservas`
 - **Requisitos:** R9.1, R9.2
 - **Manutenção:** ao fim de cada tarefa, marcar o checkbox aqui, registrar o prompt em
-  `specs/prompts.md` e regenerar `specs/prompts-completos.md` num commit `docs:` **separado**
-  dos commits de código, antes do merge da branch
+  `evidencias/prompts/prompts.md` e regenerar `evidencias/prompts/prompts-autora.md` e
+  `prompts-revisora.md` num commit `docs:` **separado** dos commits de código, antes do merge da branch
+- **Reorganização (30/09, orientação do professor):** a spec, os prompts e as imagens passaram para
+  `evidencias/` — `specs/*.md` → `evidencias/specs/autora/`, `specs/prompts.md` →
+  `evidencias/prompts/`, `specs/prompts-completos.md` → `evidencias/prompts/prompts-autora.md`; entraram
+  `evidencias/specs/revisora/spec-revisora.md`, `evidencias/prompts/prompts-revisora.md` e
+  `evidencias/imagens/`. Os caminhos citados nos itens acima e nos commits anteriores são os da época
 
 ## Fase A — Fundação
 
@@ -79,9 +84,9 @@
 - **Merge:** `git merge --no-ff feat/compose`
 
 ### T5 — Publicar o repositório no GitHub ⚠️ requer autorização
-- [ ] `gh repo create Sir-Jr/prova-primeiro-bimestre-devops --public --source . --push`
+- [x] `gh repo create Sir-Jr/prova-primeiro-bimestre-devops --public --source . --push`
       (envia só a branch atual)
-- [ ] `git push --all origin` (envia `main` e as feature branches)
+- [x] `git push --all origin` (envia `main` e as feature branches)
 - **Requisitos:** R4.1 · **Design:** D5.6 (a EC2 clona o repo)
 - **Pronto quando:** repo público acessível sem login; `git ls-remote origin` mostra `main` e as
   feature branches; o grafo com os merges `--no-ff` aparece no `main` do GitHub
@@ -90,47 +95,73 @@
 ## Fase D — Infraestrutura
 
 ### T6 — Backend do remote state
-- [ ] **Branch:** `feat/infra`
-- [ ] `infra/backend/` (providers, main, variables, outputs): S3 + versioning + SSE + public access block + DynamoDB
-- [ ] Pré-requisito: credenciais do Learner Lab atualizadas (`aws sts get-caller-identity` ok)
+- [x] **Branch:** `feat/infra`
+- [x] `infra/backend/` (providers, main, variables, outputs): S3 + versioning + SSE + public access block + DynamoDB
+- [x] Pré-requisito: credenciais do Learner Lab atualizadas (`aws sts get-caller-identity` ok)
+- [x] `apply` em 30/09: a SCP barrou a leitura do Object Lock e o bucket ficou *tainted*, como previsto;
+  contorno do D5.2 aplicado (`head-bucket` → `untaint` → `plan -refresh=false -target=…` com 3 recursos,
+  sem recriar o bucket); conferência: versioning `Enabled`, SSE `AES256`, 4 bloqueios públicos `True`,
+  tabela `ACTIVE`
 - **Requisitos:** R8.1, R8.2, C1, C2 · **Design:** D5.2
-- **Pronto quando:** `apply` ok (ou contornado com `-refresh=false` se a SCP barrar a leitura);
+- **Pronto quando:** `apply` ok — ou, se a SCP barrar a leitura do bucket e ele ficar *tainted*,
+  contornado com `head-bucket` → `terraform untaint` → `apply -refresh=false -target=…` (design D5.2);
   `aws s3api get-bucket-versioning` = `Enabled`, `get-bucket-encryption` = `AES256`; tabela `ACTIVE`
-- **Commit:** `feat: adiciona backend S3 e DynamoDB para remote state`
+- **Commit:** `feat: adiciona backend S3 e DynamoDB para remote state` (`6ce7937`)
+- **Evidência:** `evidencias/terraform-backend.txt` (dados sensíveis mascarados)
 
 ### T7 — Módulos (vpc, security-group, ec2, rds)
-- [ ] Copiar os módulos da Aula 06 para `infra/modules/`
-- [ ] `ec2`: variável `iam_instance_profile` (default `null`) e `key_name` opcional
-- [ ] `rds`: `engine_version` padrão `"16"`
+- [x] Copiar os módulos da Aula 06 para `infra/modules/`
+- [x] `ec2`: variável `iam_instance_profile` (default `null`) e `key_name` opcional
+- [x] `rds`: `engine_version` padrão `"16"` e `validation` da senha (alfanumérica, 8–128)
+- [x] `ec2`: `user_data_replace_on_change = true` (o cloud-init só roda no primeiro boot) e IMDSv2 obrigatório
 - **Requisitos:** R7.1–R7.4, R7.10, C3 · **Design:** D5.1, D5.6, D5.7
 - **Pronto quando:** `terraform fmt -check -recursive` ok; nenhum `aws_iam_*` em `infra/`
-- **Commit:** `feat: adiciona módulos vpc, security-group, ec2 e rds`
+- **Commits:** `feat: reaproveita módulos vpc, security-group, ec2 e rds da Aula 06` (cópia literal),
+  `feat: adapta módulos ec2 e rds ao Learner Lab`
 
 ### T8 — Composição, validate e plan
-- [ ] `infra/providers.tf` (provider `us-east-1` + `default_tags` + `backend "s3"`)
-- [ ] `infra/variables.tf` (com `validation` recusando `0.0.0.0/0` no SSH), `infra/terraform.tfvars.example`
-- [ ] `infra/main.tf` (AMI, vpc, sg_ec2, sg_rds, rds, ec2 com `templatefile`)
-- [ ] `infra/templates/user_data.sh.tftpl` (sem `set -x`)
-- [ ] `infra/outputs.tf` (IP, endpoint, `api_url`, `health_url`, `ssh_command`)
+- [x] `infra/providers.tf` (provider `us-east-1` + `default_tags` + `backend "s3"`)
+- [x] `infra/variables.tf` (com `validation` recusando `0.0.0.0/0` no SSH), `infra/terraform.tfvars.example`
+- [x] `infra/main.tf` (AMI, vpc, sg_ec2, sg_rds, rds, ec2 com `templatefile`)
+- [x] `infra/templates/user_data.sh.tftpl` (sem `set -x`; senha só no `api.env` com modo 600, passada ao container por `--env-file`)
+- [x] `infra/outputs.tf` (IP, endpoint, `api_url`, `health_url`, `ssh_command`)
+- [x] `init` com backend S3 (30/09; warning do `dynamodb_table` registrado), `fmt -check`, `validate`
+- [x] `plan`: 19 a adicionar, 0 a alterar, 0 a destruir; checklist D6 conferido no plan — nenhum IAM;
+  RDS `publicly_accessible = false`, `storage_encrypted = true`, PostgreSQL 16; 5432 só do SG da EC2;
+  22 só do `/32`; IMDSv2 `required`; senha e `user_data` como `(sensitive value)`; AMI
+  `al2023-ami-2023.12.20260928.0-kernel-6.12-x86_64` (dono `amazon`, não `minimal`/`ecs`)
+- [x] Parecer da IA-revisora sobre o plan antes do `apply` (V07, 30/09: aprovado; aplicar o plano salvo `infra.tfplan`)
 - **Requisitos:** R7.5–R7.9, R8.3 · **Design:** D5.3–D5.9, D6
+- **Código pronto e validado offline** (`init -backend=false` + `validate`, template renderizado com
+  `bash -n`, validações testadas no `terraform console`); `init` com backend e `plan` **aguardam o Lab**
 - **Pronto quando:** `init` usa o backend S3; `validate` ok; `plan` sem erros e aprovado no
   checklist D6 (sem IAM, RDS privado + encriptado, 5432 só do SG, 22 só `/32`)
-- **Evidência:** `evidencias/terraform-plan.txt`
+- **Conferir no plan:** nome da AMI escolhida (`al2023-ami-2023.*`, não `minimal`/`ecs`)
+- **Evidências:** `evidencias/terraform-plan.txt` (init com o warning do `dynamodb_table`, validate, plan e
+  nome da AMI; IP do administrador mascarado)
+  (deprecated no Terraform 1.16; mantido porque o enunciado exige DynamoDB)
 - **Commits:** `feat: adiciona composição dos módulos da infraestrutura`,
   `docs: adiciona evidência do terraform plan`
 
 ### T9 — Apply, teste na AWS e destroy
-- [ ] `terraform apply` → aguardar o `user_data` (~3–5 min após a EC2 subir)
-- [ ] `scripts/smoke-test.sh http://<ip>:3000` (CRUD gravando no RDS)
-- [ ] Depois do smoke test (que apaga a reserva que cria), um `POST` que **fica gravado** +
+- [x] `terraform apply infra.tfplan` (plano revisado no V07): 19 recursos, RDS em 5 min 30 s; `/health` 200
+      ~2 min depois da EC2 subir
+      (se a API não responder: SSH e `/var/log/cloud-init-output.log` — o `set -e` encerra o
+      `user_data` sem aviso externo)
+- [x] `scripts/smoke-test.sh http://<ip>:3000` (CRUD gravando no RDS): 17/17 OK
+- [x] Depois do smoke test (que apaga a reserva que cria), um `POST` que **fica gravado** +
       `GET /reservas`, registrados em `curl-aws.txt` — prova do R7.5 (dados persistidos no RDS)
-- [ ] `aws rds describe-db-instances` (conferir `PubliclyAccessible=false`, `StorageEncrypted=true`)
-- [ ] Conferir o state no S3 (`aws s3 ls`) e o lock no DynamoDB
-- [ ] `terraform destroy` → confirmar zero recursos
-- [ ] Atualizar o README com o passo a passo da AWS
+- [x] `aws rds describe-db-instances`: `PubliclyAccessible=false`, `StorageEncrypted=true`, 16.13
+- [x] Conferir o state no S3 (`aws s3 ls`: 2 versões, SSE `AES256`) e o lock no DynamoDB (só o digest, sem lock ativo)
+- [x] Capturas do console em `evidencias/imagens/` (01–13), conferidas uma a uma; ID da conta e IP do
+      administrador cobertos onde apareciam
+- [x] `terraform destroy` (plano `-destroy` com 19 recursos) → state vazio; nenhuma EC2, RDS, VPC ou SG
+      com a tag do projeto; backend mantido até depois do PR
+- [x] Atualizar o README com o passo a passo da AWS
 - **Requisitos:** R7.5, C5 · **Design:** D6
 - **Evidências:** `evidencias/terraform-apply.txt`, `evidencias/curl-aws.txt`,
-  `evidencias/rds-describe.txt`, `evidencias/terraform-destroy.txt` (outputs sem senha)
+  `evidencias/rds-describe.txt`, `evidencias/terraform-destroy.txt` (outputs sem senha; conta e IP do
+  administrador mascarados) e `evidencias/imagens/01–13`
 - **Commits:** `docs: adiciona evidências da execução na AWS`, `docs: documenta provisionamento no README`
 - **Merge:** `git merge --no-ff feat/infra` + push
 
@@ -153,7 +184,10 @@
 - [ ] Nenhum recurso ativo no Lab (EC2, RDS, VPC)
 - [ ] **Backend (S3/DynamoDB) mantido até depois do PR de 01/10** — se precisar refazer alguma
       evidência, o state está lá. Destruir após a entrega (`infra/backend`: esvaziar o bucket
-      versionado, então `terraform destroy`)
+      versionado, então `terraform destroy`). **`aws s3 rm --recursive` não basta** num bucket
+      versionado: apagar todas as versões e delete markers (`aws s3api list-object-versions` +
+      `delete-objects`) antes do destroy. Se o `terraform.tfstate` local do backend se perder, a
+      limpeza é manual via CLI
 - **Pronto quando:** todos os itens do checklist do enunciado marcados com evidência
 
 ### T12 — Entrega na disciplina (somente 01/10/2026, quinta, na aula)

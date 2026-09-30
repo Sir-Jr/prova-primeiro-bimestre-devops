@@ -1,0 +1,7 @@
+# Copie para terraform.tfvars (não versionado) e preencha.
+
+# Seu IP público com /32 — descubra com: curl -s https://checkip.amazonaws.com
+ssh_allowed_cidr = "203.0.113.10/32"
+
+# Senha do usuário master do RDS: só letras e números, 8 a 128 caracteres
+db_password = "TroqueEstaSenha123"

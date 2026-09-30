@@ -1,0 +1,44 @@
+#!/bin/bash
+# user_data da EC2 da API de Reservas (renderizado pelo Terraform com templatefile).
+# SEM "set -x": o trace ecoaria a senha do banco no /var/log/cloud-init-output.log (design D5.6).
+set -euo pipefail
+
+echo "[bootstrap] instalando Docker e Git"
+dnf install -y docker git
+systemctl enable --now docker
+
+echo "[bootstrap] baixando o CA bundle do RDS (validação do certificado TLS)"
+mkdir -p /opt/certs
+curl -fsSL https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem \
+  -o /opt/certs/rds-global-bundle.pem
+chmod 644 /opt/certs/rds-global-bundle.pem
+
+echo "[bootstrap] clonando ${repo_url} (branch ${repo_branch})"
+rm -rf /opt/technova
+git clone --depth 1 --branch "${repo_branch}" "${repo_url}" /opt/technova
+
+echo "[bootstrap] construindo a imagem da API"
+docker build -t technova-reservas:1.0 /opt/technova/app
+
+# Variáveis do container num arquivo só do root (a senha não aparece na linha de comando do docker)
+install -m 600 /dev/null /opt/technova/api.env
+cat > /opt/technova/api.env <<ENV
+PORT=3000
+DB_HOST=${db_host}
+DB_PORT=${db_port}
+DB_NAME=${db_name}
+DB_USER=${db_user}
+DB_PASSWORD=${db_password}
+DB_SSL=true
+DB_SSL_CA=/certs/rds-global-bundle.pem
+ENV
+
+echo "[bootstrap] subindo a API"
+docker rm -f api 2>/dev/null || true
+docker run -d --name api --restart unless-stopped \
+  -p 3000:3000 \
+  --env-file /opt/technova/api.env \
+  -v /opt/certs:/certs:ro \
+  technova-reservas:1.0
+
+echo "[bootstrap] concluído"
