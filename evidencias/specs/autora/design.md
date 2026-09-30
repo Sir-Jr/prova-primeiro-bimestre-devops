@@ -358,6 +358,6 @@ evidência visível do uso de feature branch.
 | R6 | 4 |
 | R7 | 5.1, 5.3–5.9 |
 | R8 | 5.2 |
-| R9 | 6, `specs/prompts.md` |
+| R9 | 6, `evidencias/prompts/prompts.md` |
 | R10 | `relatorio.md` (tarefa final) |
 | C1–C6 | 5.2, 5.6, 5.7, 5.8 |

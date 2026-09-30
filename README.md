@@ -17,9 +17,10 @@ Este repositório entrega a jornada completa da aplicação:
 - **Docker Compose** — API + PostgreSQL subindo com um comando
 - **Terraform** — infraestrutura AWS modularizada (VPC, Security Groups, EC2, RDS) com remote
   state em S3 + DynamoDB, no AWS Academy Learner Lab
-- **Spec-Driven com IA** — requisitos, design e tarefas em [`specs/`](specs/), com revisão cruzada
-  entre dois agentes e decisão humana em cada etapa; registro de prompts e erros em
-  [`specs/prompts.md`](specs/prompts.md)
+- **Spec-Driven com IA** — requisitos, design e tarefas em
+  [`evidencias/specs/`](evidencias/specs/), com revisão cruzada entre dois agentes e decisão humana
+  em cada etapa; registro de prompts e erros em
+  [`evidencias/prompts/prompts.md`](evidencias/prompts/prompts.md)
 
 ## Stack
 
@@ -45,13 +46,15 @@ Este repositório entrega a jornada completa da aplicação:
 
 ```
 prova-primeiro-bimestre-devops/
-├── specs/                  # Spec-Driven: requisitos, design, tarefas e registro de prompts
 ├── app/                    # API de Reservas (código, Dockerfile, .dockerignore)
 ├── docker-compose.yml      # API + PostgreSQL (ambiente local)
 ├── .env.example
 ├── scripts/                # smoke test das rotas
 ├── infra/                  # Terraform modularizado + backend do remote state
 ├── evidencias/             # saídas de build, compose, plan, apply, testes e destroy
+│   ├── specs/              # Spec-Driven: spec da IA-autora e pareceres da IA-revisora
+│   ├── prompts/            # registro de prompts (resumo, IA-autora, IA-revisora) e erros
+│   └── imagens/            # screenshots
 └── relatorio.md            # relatório do processo com IA
 ```
 

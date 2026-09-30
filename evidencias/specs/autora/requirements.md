@@ -116,8 +116,8 @@ obrigatória, formato `AAAA-MM-DD`), `status` (`pendente` | `confirmada` | `canc
 
 | # | Critério de aceite |
 |---|--------------------|
-| 9.1 | A solução DEVE ser construída no fluxo Spec-Driven (`specs/requirements.md` → `design.md` → `tasks.md`) |
-| 9.2 | Os prompts principais, o que a IA gerou e o que foi corrigido DEVEM ser registrados em `specs/prompts.md` |
+| 9.1 | A solução DEVE ser construída no fluxo Spec-Driven (`evidencias/specs/autora/requirements.md` → `design.md` → `tasks.md`) |
+| 9.2 | Os prompts principais, o que a IA gerou e o que foi corrigido DEVEM ser registrados em `evidencias/prompts/prompts.md` |
 | 9.3 | Todo código gerado DEVE ser revisado e validado antes de commit/apply |
 
 ## R10 — Relatório

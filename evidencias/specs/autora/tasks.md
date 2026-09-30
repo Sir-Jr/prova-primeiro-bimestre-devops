@@ -17,8 +17,13 @@
 - [x] `specs/tasks.md` + `specs/prompts.md` → `docs: adiciona tarefas da spec da API de Reservas`
 - **Requisitos:** R9.1, R9.2
 - **Manutenção:** ao fim de cada tarefa, marcar o checkbox aqui, registrar o prompt em
-  `specs/prompts.md` e regenerar `specs/prompts-completos.md` num commit `docs:` **separado**
-  dos commits de código, antes do merge da branch
+  `evidencias/prompts/prompts.md` e regenerar `evidencias/prompts/prompts-autora.md` e
+  `prompts-revisora.md` num commit `docs:` **separado** dos commits de código, antes do merge da branch
+- **Reorganização (30/09, orientação do professor):** a spec, os prompts e as imagens passaram para
+  `evidencias/` — `specs/*.md` → `evidencias/specs/autora/`, `specs/prompts.md` →
+  `evidencias/prompts/`, `specs/prompts-completos.md` → `evidencias/prompts/prompts-autora.md`; entraram
+  `evidencias/specs/revisora/spec-revisora.md`, `evidencias/prompts/prompts-revisora.md` e
+  `evidencias/imagens/`. Os caminhos citados nos itens acima e nos commits anteriores são os da época
 
 ## Fase A — Fundação
 
