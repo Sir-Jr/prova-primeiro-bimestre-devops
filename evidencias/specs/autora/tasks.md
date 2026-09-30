@@ -144,19 +144,24 @@
   `docs: adiciona evidência do terraform plan`
 
 ### T9 — Apply, teste na AWS e destroy
-- [ ] `terraform apply` → aguardar o `user_data` (~3–5 min após a EC2 subir)
+- [x] `terraform apply infra.tfplan` (plano revisado no V07): 19 recursos, RDS em 5 min 30 s; `/health` 200
+      ~2 min depois da EC2 subir
       (se a API não responder: SSH e `/var/log/cloud-init-output.log` — o `set -e` encerra o
       `user_data` sem aviso externo)
-- [ ] `scripts/smoke-test.sh http://<ip>:3000` (CRUD gravando no RDS)
-- [ ] Depois do smoke test (que apaga a reserva que cria), um `POST` que **fica gravado** +
+- [x] `scripts/smoke-test.sh http://<ip>:3000` (CRUD gravando no RDS): 17/17 OK
+- [x] Depois do smoke test (que apaga a reserva que cria), um `POST` que **fica gravado** +
       `GET /reservas`, registrados em `curl-aws.txt` — prova do R7.5 (dados persistidos no RDS)
-- [ ] `aws rds describe-db-instances` (conferir `PubliclyAccessible=false`, `StorageEncrypted=true`)
-- [ ] Conferir o state no S3 (`aws s3 ls`) e o lock no DynamoDB
-- [ ] `terraform destroy` → confirmar zero recursos
-- [ ] Atualizar o README com o passo a passo da AWS
+- [x] `aws rds describe-db-instances`: `PubliclyAccessible=false`, `StorageEncrypted=true`, 16.13
+- [x] Conferir o state no S3 (`aws s3 ls`: 2 versões, SSE `AES256`) e o lock no DynamoDB (só o digest, sem lock ativo)
+- [x] Capturas do console em `evidencias/imagens/` (01–13), conferidas uma a uma; ID da conta e IP do
+      administrador cobertos onde apareciam
+- [x] `terraform destroy` (plano `-destroy` com 19 recursos) → state vazio; nenhuma EC2, RDS, VPC ou SG
+      com a tag do projeto; backend mantido até depois do PR
+- [x] Atualizar o README com o passo a passo da AWS
 - **Requisitos:** R7.5, C5 · **Design:** D6
 - **Evidências:** `evidencias/terraform-apply.txt`, `evidencias/curl-aws.txt`,
-  `evidencias/rds-describe.txt`, `evidencias/terraform-destroy.txt` (outputs sem senha)
+  `evidencias/rds-describe.txt`, `evidencias/terraform-destroy.txt` (outputs sem senha; conta e IP do
+  administrador mascarados) e `evidencias/imagens/01–13`
 - **Commits:** `docs: adiciona evidências da execução na AWS`, `docs: documenta provisionamento no README`
 - **Merge:** `git merge --no-ff feat/infra` + push
 

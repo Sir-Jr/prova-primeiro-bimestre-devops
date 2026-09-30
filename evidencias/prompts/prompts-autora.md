@@ -620,15 +620,15 @@ _Parecer da IA-revisora, colado pelo usuário:_
 >
 > Pareceres emitidos desde o último confirmado: V06.
 
-### P51 — 30/09/2026 13:05 · T6 (commit) → T8 — init e plan; avisar na etapa das evidências do painel da AWS
+### P51 — 30/09/2026 13:05 · T6 — commit e push aprovados
 
 > pode commitar e dar push
 
-### P52 — 30/09/2026 13:07 · T8 — parecer V07 (plan aprovado) e apply aprovado pelo usuário
+### P52 — 30/09/2026 13:07 · T8 — init e plan; avisar na etapa das evidências do painel da AWS
 
 > pode seguir com a T8, quando chegar a etapa das evidências do painel da AWS você me avisa.
 
-### P53 — 30/09/2026 13:12 · —
+### P53 — 30/09/2026 13:12 · T8 — parecer V07 (plan aprovado) e apply aprovado pelo usuário
 
 > resposta da revisora:
 
@@ -673,3 +673,153 @@ _Parecer da IA-revisora, colado pelo usuário:_
 > Pareceres emitidos desde o último confirmado: V07.
 
 > Eu como revisador, aprovo o apply.
+
+### P54 — 30/09/2026 13:18 · T9 — aguardar o fim do apply
+
+> ok, me avise quando terminar o apply
+
+### P55 — 30/09/2026 13:22 · T9 — smoke test, POST que fica gravado e conferências aprovados
+
+> pode seguir com os passos 1 a 3
+
+### P56 — 30/09/2026 13:27 · T9 — capturas: 01 EC2
+
+> Vou mandar por aqui mesmo as capturas, vou mandar por sequência, primeira: [Image #5]
+
+### P57 — 30/09/2026 13:29 · T9 — capturas: 01 EC2 (substituída, com IP público)
+
+> atualize a primeira por essa: [Image #6]
+
+### P58 — 30/09/2026 13:32 · T9 — capturas: 02 lista do RDS
+
+> Essa é a evidência certa? [Image #7]
+
+### P59 — 30/09/2026 13:35 · T9 — capturas: 03 RDS segurança e conexão
+
+> não encontrei essa parte de conectividade e segurança: [Image #8]
+
+### P60 — 30/09/2026 13:37 · T9 — capturas: configuração do RDS (ARN com a conta)
+
+> [Image #9]
+
+### P61 — 30/09/2026 13:38 · T9 — capturas: descartar a do ARN; só o bloco de armazenamento
+
+> apague, vou mandar apenas do bloco de armazenamento
+
+### P62 — 30/09/2026 13:39 · T9 — capturas: 04 criptografia do RDS
+
+> [Image #10]
+
+### P63 — 30/09/2026 13:41 · T9 — capturas: 05 sub-redes
+
+> [Image #11]
+
+### P64 — 30/09/2026 13:45 · T9 — capturas: lista de SGs (coluna Proprietário com a conta; não salva)
+
+> [Image #12], apareceu mais opções
+
+### P65 — 30/09/2026 13:47 · T9 — capturas: qual SG capturar
+
+> qual é o certo technova-reservas-prova-ec2-sg ou  technova-reservas-prova-rds-sg?
+
+### P66 — 30/09/2026 13:48 · T9 — capturas: 06 SG do RDS
+
+> [Image #14]
+
+### P67 — 30/09/2026 13:49 · T9 — capturas: 07 SG da EC2 (IP coberto)
+
+> [Image #15]
+
+### P68 — 30/09/2026 13:50 · T9 — capturas: conferir a tarja da 07
+
+> quero ver o nresultado dessa última imafem
+
+### P69 — 30/09/2026 13:50 · T9 — capturas: caminho da 07
+
+> mande o caminho da imagem
+
+### P70 — 30/09/2026 13:51 · T9 — capturas: 07 conferida pelo usuário
+
+> verifiquei, pode prosseguir
+
+### P71 — 30/09/2026 13:53 · T9 — capturas: bucket S3 só com a pasta (não salva)
+
+> É esse? [Image #16]
+
+### P72 — 30/09/2026 13:54 · T9 — capturas: 08 state no S3
+
+> [Image #17]
+
+### P73 — 30/09/2026 13:57 · T9 — capturas: 09 versões do state
+
+> [Image #18]
+
+### P74 — 30/09/2026 13:59 · T9 — capturas: 10 DynamoDB
+
+> [Image #19]
+
+### P75 — 30/09/2026 14:01 · T9 — capturas: navegador sem a barra de endereço (não salva)
+
+> [Image #20]
+
+### P76 — 30/09/2026 14:01 · T9 — capturas: 11 GET /reservas na EC2
+
+> [Image #21]
+
+### P77 — 30/09/2026 14:02 · T9 — como abrir o /health
+
+> como rodar o /health
+
+### P78 — 30/09/2026 14:03 · T9 — capturas: 12 /health na EC2
+
+> [Image #22]
+
+### P79 — 30/09/2026 14:04 · T9 — capturas: detalhes da EC2
+
+> quero tirar do painel de detalhes EC2 também
+
+### P80 — 30/09/2026 14:06 · T9 — capturas: 13 detalhes da EC2 (conta coberta)
+
+> Esse? [Image #23]
+
+### P81 — 30/09/2026 14:06 · T9 — capturas: conferir a tarja da 13
+
+> quero verificar a censura que você editou, mande o caminho da imagem
+
+### P82 — 30/09/2026 14:07 · T9 — capturas conferidas; destroy aprovado
+
+> verifiquei, pode seguir com o destroy
+
+### P83 — 30/09/2026 14:20 · T9 — parecer V08 (aprovada; commits e merge da feat/infra aprovados)
+
+_Parecer da IA-revisora, colado pelo usuário:_
+
+> Parecer V08 — 14:16 BRT 30/09 (último confirmado pela IA-autora: V07)
+>
+> Revisão da T9 — apply, teste e destroy (staged, feat/infra): APROVADA.
+>
+> Conferido nos arquivos e nas 13 imagens (abertas uma a uma):
+> - curl-aws.txt: smoke test 17/17 na EC2 + reserva id 2 gravada e lida
+>   (prova do R7.5); a imagem 11 mostra o mesmo registro.
+> - rds-describe.txt: PubliclyAccessible false, StorageEncrypted true;
+>   imagens 02-04 confirmam db.t3.micro, us-east-1b, sem internet
+>   gateway, KMS aws/rds.
+> - SGs: 06 mostra 5432 só a partir do SG da EC2; 07 mostra 22 com o IP
+>   tarjado /32 e 3000 aberta.
+> - Remote state: 08-09 mostram o terraform.tfstate em prova/ com 2
+>   versões; 10 mostra a tabela de lock ativa com LockID (S).
+> - terraform-destroy.txt: 19 destroyed; backend mantido (decisão T11).
+> - Dados sensíveis: IP do administrador tarjado (07), conta tarjada em
+>   "Proprietário" (13); nenhum IP do admin, conta de 12 dígitos ou chave
+>   nos .txt. O IP da EC2 e os IDs de VPC/SG são de recursos já
+>   destruídos, e o IP da EC2 é a própria URL da API (evidência exigida).
+>
+> E18 e exportador ignorando <task-notification>: de acordo.
+>
+> Commit docs da T9 e merge --no-ff feat/infra no main: aprovados.
+> Depois do merge, push do main e da feat/infra.
+>
+> Próxima (T10): relatório. As reflexões das 4 questões vêm do usuário;
+> a IA-autora monta estrutura e fatos e para para pedir o texto dele.
+>
+> Pareceres emitidos desde o último confirmado: V08.
