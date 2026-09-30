@@ -924,3 +924,47 @@ _Parecer da IA-revisora, colado pelo usuário:_
 ### P101 — 30/09/2026 15:21 · T10 — frase final da Q4: versão mais literal
 
 > use a alternativa mais literal
+
+### P102 — 30/09/2026 15:21 · T10 — commit, merge da docs/relatorio e push aprovados
+
+> pode commitar, fazer o merge e dar push
+
+### P103 — 30/09/2026 15:24 · T11 — início da revisão final
+
+> pode começar a T11
+
+### P104 — 30/09/2026 15:26 · T12 — campo da ferramenta de IA no entrega.md: opção A
+
+> use a opção A no entrega.md
+
+### P105 — 30/09/2026 15:28 · T11 — parecer V10 (aprovada; entrega.md passa pela revisora antes do PR)
+
+> revisão da revisora:
+
+_Parecer da IA-revisora, colado pelo usuário:_
+
+> Parecer V10 — 15:29 BRT 30/09 (último confirmado pela IA-autora: V09)
+>
+> Revisão da T11 — revisão final (staged, docs/revisao-final): APROVADA.
+>
+> Refeito de forma independente:
+> - main local = origin/main (0310217); repo responde 200 sem login.
+> - 31 commits, 5 merges --no-ff; todos os assuntos em Conventional
+>   Commits ou "Merge branch"; nenhum Co-authored-by.
+> - git ls-files: nenhum .env, *.tfvars, *.tfstate, *.tfplan/tfplan,
+>   *.pem, node_modules ou .terraform/.
+> - prompts.md: nenhuma célula "(preencher após a revisão)" restante.
+> - V09 aplicado: "a partir de V01" (l. 8 da Q2) e "poderia levar"
+>   (l. 177); frase final escolhida pelo usuário.
+>
+> Campo "Ferramenta de IA utilizada" no entrega.md (opção A): de acordo;
+> o modelo do enunciado pede esse campo.
+>
+> Commit "docs: registra revisão final da entrega", merge --no-ff
+> docs/revisao-final e push: aprovados.
+>
+> T12 (só amanhã, 01/10, na aula): o entrega.md passa por mim antes do
+> PR, porque o PR é imutável. Depois do PR: destruir o backend, esvaziando
+> todas as versões do bucket antes.
+>
+> Pareceres emitidos desde o último confirmado: V10.

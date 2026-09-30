@@ -180,10 +180,30 @@
 - **Merge:** `git merge --no-ff docs/relatorio` + push
 
 ### T11 — Revisão final (30/09)
-- [ ] Checklist do `entrega.md` item a item contra o repo publicado
-- [ ] `git log --oneline --graph` (≥ 6 commits, merges visíveis)
-- [ ] `git ls-files` sem arquivos proibidos; repo público
-- [ ] Nenhum recurso ativo no Lab (EC2, RDS, VPC)
+- [x] Checklist do `entrega.md` item a item contra o repo publicado (30/09, clone anônimo da `main`):
+
+  | Item do checklist | Onde está a prova |
+  |---|---|
+  | Repositório público com README (nome + RA) e `.gitignore` | clone sem login; `README.md` l. 3–4 |
+  | Mínimo de 6 commits com Conventional Commits + feature branch | `main` com 31 commits e 5 merges `--no-ff`; 5 branches no GitHub |
+  | CRUD completo + `/health` | `app/src/routes/reservas.js`, `app/src/app.js`; `curl-local.txt`, `curl-aws.txt` |
+  | CRUD gravando no PostgreSQL | `pg` em `app/src/db.js`; reserva `id 2` gravada no RDS (`curl-aws.txt`, imagem 11) |
+  | Dockerfile funcional | `app/Dockerfile`; `docker-build.txt` |
+  | `docker-compose.yml` subindo com um comando | `compose-ps.txt` (`api` e `db` *healthy*) |
+  | Terraform modularizado (vpc, security-group, ec2, rds) | `infra/modules/`; composição em `infra/main.tf` |
+  | RDS PostgreSQL nas subnets privadas | `subnet_ids = module.vpc.private_subnet_ids`; `rds-describe.txt`; imagens 02–04 |
+  | Remote state (S3 + DynamoDB) | `infra/backend/`, `infra/providers.tf`; `terraform-backend.txt`; imagens 08–10 |
+  | LabRole/LabInstanceProfile, sem IAM próprio | nenhum `aws_iam_*`; `iam_instance_profile = "LabInstanceProfile"` |
+  | `terraform validate` e `plan` sem erros | `terraform-plan.txt` (*configuration is valid*; `Plan: 19 to add`) |
+  | `relatorio.md` completo (4 questões) | `relatorio.md` na raiz |
+  | `terraform destroy` após as evidências | `terraform-destroy.txt` (`19 destroyed` + conferência) |
+- [x] `git log --oneline --graph` (≥ 6 commits, merges visíveis): 31 commits, 5 merges; 100% Conventional
+      Commits; nenhuma co-autoria
+- [x] `git ls-files` sem arquivos proibidos (`.env`, `*.tfvars`, `*.tfstate`, `*.tfplan`, chaves,
+      `node_modules`, `.terraform/`); repo público (clone anônimo e página com HTTP 200 sem login)
+- [x] Links relativos dos `.md` publicados: 46 conferidos, nenhum quebrado
+- [x] Nenhum recurso ativo no Lab (EC2, RDS, VPC): conferido logo após o `destroy`
+      (`terraform-destroy.txt`); depois disso o Lab foi parado
 - [ ] **Backend (S3/DynamoDB) mantido até depois do PR de 01/10** — se precisar refazer alguma
       evidência, o state está lá. Destruir após a entrega (`infra/backend`: esvaziar o bucket
       versionado, então `terraform destroy`). **`aws s3 rm --recursive` não basta** num bucket
@@ -191,14 +211,17 @@
       `delete-objects`) antes do destroy. Se o `terraform.tfstate` local do backend se perder, a
       limpeza é manual via CLI
 - **Pronto quando:** todos os itens do checklist do enunciado marcados com evidência
+- **Commit:** `docs: registra revisão final da entrega`
 
 ### T12 — Entrega na disciplina (somente 01/10/2026, quinta, na aula)
 - [ ] Sincronizar o `main` do fork `devops_20262` com o upstream
 - [ ] Criar a branch e `entregas/provaPrimeiroBi/6325269/entrega.md` (modelo do enunciado; campo
-      da ferramenta de IA: "descrita no `relatorio.md`")
+      da ferramenta de IA: "Claude (Opus 5.5), descrita no `relatorio.md`" — decisão de 30/09, seguindo o
+      campo pedido no modelo)
 - [ ] Seção **Evidências** preenchida: trechos de `docker compose ps`, `terraform plan` (resumo
       `Plan: N to add`) e smoke test na AWS, com links diretos para os arquivos em `evidencias/` do repo
 - [ ] Checklist do modelo marcado item a item
+- [ ] `entrega.md` revisado pela IA-revisora antes do PR (o PR é imutável; V10)
 - [ ] Commit, push e **um único** PR: `[Prova Primeiro Bimestre] RA: 6325269 - Sirlande Martins`
 - [ ] **Nenhum commit após abrir o PR**
 - **Proibido executar antes de 01/10/2026**
