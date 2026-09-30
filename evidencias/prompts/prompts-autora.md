@@ -988,3 +988,23 @@ _Parecer da IA-revisora, colado pelo usuário:_
 > Substituir os dois arquivos inteiros em evidencias/. Esta resposta
 > (A38) e qualquer prompt novo ficam para o export de amanhã, junto com
 > a T12.
+
+### P109 — 30/09/2026 15:34 · Registro de prompts — commit, merge e push aprovados
+
+> pode commitar, fazer o merge e dar push
+
+### P110 — 30/09/2026 15:36 · Vistoria manual — caminho da prova para abrir no VS Code
+
+> antes de encerrar, mande o caminho da prova para eu colar no terminal e acessar no vscode, quero fazer uma vistoria nos arquivos e na estrutura manualmente.
+
+### P111 — 30/09/2026 15:37 · Vistoria manual — abrir a prova no VS Code
+
+_Comando executado pelo usuário no terminal (`!`):_
+
+```
+code /home/sirla/faculdade/projeto_ale/prova-primeiro-bimestre-devops
+```
+
+### P112 — 30/09/2026 15:44 · Vistoria manual — conferir alterações acidentais e salvar os últimos prompts
+
+> fiz a vistoria, veja se eu não alterei nada sem querer, e depois salve os últimos prompts daqui.
