@@ -1008,3 +1008,194 @@ code /home/sirla/faculdade/projeto_ale/prova-primeiro-bimestre-devops
 ### P112 — 30/09/2026 15:44 · Vistoria manual — conferir alterações acidentais e salvar os últimos prompts
 
 > fiz a vistoria, veja se eu não alterei nada sem querer, e depois salve os últimos prompts daqui.
+
+### P113 — 30/09/2026 15:45 · Memória — salvar o progresso
+
+> salve na memória o nosso progresso.
+
+### P114 — 30/09/2026 19:33 · T12 — retomada: onde paramos
+
+> onde paramos?
+
+### P115 — 30/09/2026 19:37 · T12 — passo 1: retomar o registro de prompts
+
+> sim, começa pelo passo 1
+
+### P116 — 30/09/2026 19:38 · Registro de prompts — registrar o E19 e manter sem commit até 01/10 (opção B)
+
+> registra o E19 e faz a opção B
+
+### P117 — 30/09/2026 19:39 · Relatório — atualizar a faixa de erros para E1–E19
+
+> sim, troca para E1–E19 no relatório
+
+### P118 — 30/09/2026 19:39 · Registro de prompts — conferir que os arquivos seguem sem alteração indevida
+
+> os arquivos continuam inalterados?
+
+### P119 — 30/09/2026 19:40 · Revisão — pegadinhas do enunciado encontradas no processo
+
+> essa prova teve pegadinhas, durante o processo foi encontrado elas?
+
+### P120 — 30/09/2026 19:43 · T12 — desenhar o fluxo de entrega de 01/10
+
+> desenhe como você vai entregar a prova amanhã
+
+### P121 — 30/09/2026 19:45 · T12 — sugestões aceitas (congelar antes do PR; nome da branch) e salvas na memória
+
+> concordo com as duas sugestões, salva na memória
+
+### P122 — 30/09/2026 19:47 · Vistoria manual — caminho para abrir a tabela de erros no VS Code
+
+> mande o caminho para eu acessar o vs code e ver a tabela de erro que as IAs cometerão
+
+### P123 — 30/09/2026 19:48 · Vistoria manual — abrir a prova no VS Code
+
+_Comando executado pelo usuário no terminal (`!`):_
+
+```
+code /home/sirla/faculdade/projeto_ale/prova-primeiro-bimestre-devops
+```
+
+### P124 — 30/09/2026 23:19 · Retomada — onde paramos
+
+> onde paramos
+
+### P125 — 30/09/2026 23:20 · Revisão geral — parecer V11 (aprovada; README l. 3–6 → E20)
+
+> última revisão geral da revisora:
+
+_Parecer da IA-revisora, colado pelo usuário:_
+
+> A prova está aprovada no conteúdo: os 13 itens do checklist do enunciado estão atendidos no `main` publicado. Peço só 1 correção pequena no README. O que falta é o roteiro de amanhã: o commit do registro, o `entrega.md` (que ainda não existe e passa por mim antes do PR) e o PR.
+>
+> ```
+> Parecer V11 — 23:20 BRT 30/09 (último confirmado pela IA-autora: V10)
+>
+> Revisão geral (origin/main = 3555a5f, igual ao local): APROVADA com 1
+> correção.
+>
+> Checklist do enunciado, conferido no main publicado:
+>  1 Repo público (HTTP 200 sem login), README com nome + RA, .gitignore ✓
+>  2 37 commits, 8 merges --no-ff, 100% Conventional Commits, sem
+>    co-autoria ✓
+>  3 CRUD + /health (app/src/routes/reservas.js, app.js) ✓
+>  4 CRUD no PostgreSQL (db.js; reserva id 2 lida do RDS em curl-aws.txt) ✓
+>  5 Dockerfile multi-stage, não-root (docker-build.txt) ✓
+>  6 docker-compose.yml API + Postgres, volume, rede, healthchecks
+>    (compose-ps.txt) ✓
+>  7 Terraform modularizado: modules/vpc, security-group, ec2, rds ✓
+>  8 RDS nas subnets privadas, privado e criptografado (rds-describe.txt,
+>    imagens 02-04) ✓
+>  9 Remote state S3 + DynamoDB (infra/backend, providers.tf,
+>    terraform-backend.txt, imagens 08-10) ✓
+> 10 LabInstanceProfile, nenhum aws_iam_* ✓
+> 11 validate + plan sem erros (terraform-plan.txt, 19 to add) ✓
+> 12 relatorio.md com a ferramenta no início e 4 questões, todas acima
+>    de 10 linhas ✓
+> 13 destroy executado (terraform-destroy.txt, 19 destroyed) ✓
+> Estrutura de pastas do enunciado: completa (app/, docker-compose.yml,
+> .env.example, infra/ com backend e modules, evidencias/ com os 3
+> arquivos pedidos, relatorio.md). Nenhum arquivo proibido versionado.
+>
+> Correção (entra no commit docs: de amanhã, antes do entrega.md):
+> - README.md l. 3-6: Aluno / RA / Disciplina / Avaliação estão em linhas
+>   seguidas sem quebra, e no GitHub viram um parágrafo só. É o ajuste
+>   de forma do parecer da T1 (29/09), que não foi aplicado. Terminar
+>   cada linha com dois espaços ou usar lista "-". Registrar como E20
+>   (ajuste de parecer não aplicado, detectado na revisão geral).
+>
+> Pendências do roteiro de 01/10 (sem mudança):
+> - Working tree da docs/registro-prompts (E19 + "E1–E19" no relatório):
+>   coerente, porque o main tem 18 erros e o relatório diz E1–E18. Entra
+>   no commit único de amanhã.
+> - entrega.md: ainda não existe no fork; passa por mim antes do PR.
+> - Não verificado por mim: recursos ativos na AWS hoje (não uso as
+>   credenciais). As evidências mostram o destroy completo; só o backend
+>   ficou, por decisão.
+>
+> Pareceres emitidos desde o último confirmado: V11.
+> ```
+
+### P126 — 30/09/2026 23:22 · T12 — pasta de entrega dentro do RA
+
+> a entrega vai ser dentro da pasta do meu RA?
+
+### P127 — 30/09/2026 23:24 · Registro de prompts — prompts de 01/10 entram no registro
+
+> amanhã os últimos prompts vão ser adicionados ou encerramos essa parte também?
+
+### P128 — 30/09/2026 23:25 · Registro de prompts — manter o plano; export da revisora só em 01/10
+
+> mantém o plano de ontem, quer que eu peça o export novo para a revisora, ou amanhã é mais adequado?
+
+### P129 — 30/09/2026 23:25 · Memória — salvar o progresso
+
+> salve na memória o nosso progresso
+
+### P130 — 01/10/2026 19:19 · T12 — retomada: onde paramos
+
+> onde paramos?
+
+### P131 — 01/10/2026 19:20 · T12 — rascunho do entrega.md
+
+> sim, faz o rascunho do entrega.md
+
+### P132 — 01/10/2026 19:34 · T12 — parecer V12 (entrega.md aprovado com 3 ajustes)
+
+> revisão da revisora:
+
+_Parecer da IA-revisora, colado pelo usuário:_
+
+> Parecer V12 — 19:35 BRT 01/10 (último confirmado pela IA-autora: V11)
+>
+> Revisão do entrega.md (fork, branch entregas/provaPrimeiroBi/6325269,
+> sem commit) + repo da prova (working tree): APROVADO com 3 ajustes.
+>
+> Conferido:
+> - Fork: main = upstream/main (aa8a051); branch com o nome decidido;
+>   pasta entregas/provaPrimeiroBi/6325269/ só com o entrega.md.
+> - Estrutura e campos iguais ao modelo do enunciado; ferramenta pela
+>   opção A; 13/13 itens marcados.
+> - Trechos idênticos aos arquivos: compose-ps.txt (l. 5-8),
+>   terraform-plan.txt (init l. 8, fmt/validate l. 35, plan -out l. 42,
+>   Plan: 19 l. 619), curl-aws.txt (17/17), terraform-destroy.txt
+>   (l. 782). Âncora #imagens--imagens bate com o título do índice.
+> - Repo da prova: README l. 3-6 em lista (E20), relatório "E1–E20",
+>   E19 e E20 no prompts.md. Nome e RA continuam nas linhas 3-4.
+>
+> Ajustes:
+> 1. (fidelidade) Trecho do rds-describe.txt: entre Engine e SubnetGroup
+>    foram cortadas 4 linhas (Version, MultiAZ, Endpoint, Port) sem
+>    (...), mas o texto diz que todo corte foi marcado. Copiar as
+>    linhas 9-17 inteiras. O "Version": "16.13" ainda reforça o
+>    PostgreSQL 16.
+> 2. (forma) l. 5: "**Data:** 01/10/2026" sem os dois espaços no fim; no
+>    GitHub, Data e Ferramenta viram uma linha só. Acrescentar os dois
+>    espaços (o conteúdo continua literal ao modelo).
+> 3. (números) l. 40: "37 commits e 8 merges" fica errado depois do
+>    commit final. Preencher com git rev-list --count main e
+>    --merges --count main DEPOIS de congelar o repo e ANTES do commit
+>    do entrega.md. Conferir também se docs/registro-prompts aparece no
+>    GitHub.
+>
+> Ordem aprovada: commit único docs: no repo da prova (E19 + E20 +
+> prompts + exports da revisora), merge --no-ff, push, congelar →
+> atualizar números no entrega.md → commit sem co-autoria → push → PR
+> com 1 arquivo e 1 commit, só com a autorização explícita do usuário.
+>
+> Pareceres emitidos desde o último confirmado: V12.
+
+### P133 — 01/10/2026 19:36 · T12 — exports finais da IA-revisora (R01–R42, A01–A40, V01–V12); congelamento
+
+> export da revisora pronto:
+
+_Parecer da IA-revisora, colado pelo usuário:_
+
+> Exports finais da IA-revisora (01/10 19:35 BRT):
+> - /home/sirla/faculdade/projeto_ale/prompts-revisora.md → R01–R42
+> - /home/sirla/faculdade/projeto_ale/spec-revisora.md → A01–A40,
+>   pareceres V01–V12
+> Substituir os dois arquivos inteiros em evidencias/ e incluir no commit
+> único antes de congelar. Mensagens posteriores a este export ficam fora
+> do registro, como decidido para o congelamento.

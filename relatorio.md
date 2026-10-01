@@ -73,7 +73,7 @@ repetitivo: a spec com rastreabilidade, a API com validação e tratamento de er
 o Compose com healthchecks, o smoke test, a composição dos módulos e as evidências com os dados sensíveis
 mascarados.
 
-O que precisou ser corrigido ficou registrado na tabela de erros (E1–E18) do
+O que precisou ser corrigido ficou registrado na tabela de erros (E1–E22) do
 [`prompts.md`](evidencias/prompts/prompts.md), sempre depois de verificado contra um fato. Exemplos: o
 design não tinha healthcheck explícito da API no Compose (E2) e não alertava que `set -x` no `user_data`
 vazaria a senha (E3); o filtro da AMI herdado da Aula 06 também casava com imagens `minimal` e `ecs`

@@ -214,14 +214,15 @@
 - **Commit:** `docs: registra revisão final da entrega`
 
 ### T12 — Entrega na disciplina (somente 01/10/2026, quinta, na aula)
-- [ ] Sincronizar o `main` do fork `devops_20262` com o upstream
-- [ ] Criar a branch e `entregas/provaPrimeiroBi/6325269/entrega.md` (modelo do enunciado; campo
+- [x] Sincronizar o `main` do fork `devops_20262` com o upstream (01/10: já igual, `aa8a051`)
+- [x] Criar a branch e `entregas/provaPrimeiroBi/6325269/entrega.md` (modelo do enunciado; campo
       da ferramenta de IA: "Claude (Opus 5.5), descrita no `relatorio.md`" — decisão de 30/09, seguindo o
       campo pedido no modelo)
-- [ ] Seção **Evidências** preenchida: trechos de `docker compose ps`, `terraform plan` (resumo
+- [x] Seção **Evidências** preenchida: trechos de `docker compose ps`, `terraform plan` (resumo
       `Plan: N to add`) e smoke test na AWS, com links diretos para os arquivos em `evidencias/` do repo
-- [ ] Checklist do modelo marcado item a item
-- [ ] `entrega.md` revisado pela IA-revisora antes do PR (o PR é imutável; V10)
+- [x] Checklist do modelo marcado item a item
+- [x] `entrega.md` revisado pela IA-revisora antes do PR (o PR é imutável; V10) — V12 aprovado com 3 ajustes (E21, E22, contagem de commits)
+- [x] Registro fechado e repositório congelado antes do PR: prompts até P133 / R42, exports A01–A40 e V01–V12, um único commit `docs:` com merge na `main`
 - [ ] Commit, push e **um único** PR: `[Prova Primeiro Bimestre] RA: 6325269 - Sirlande Martins`
 - [ ] **Nenhum commit após abrir o PR**
 - **Proibido executar antes de 01/10/2026**

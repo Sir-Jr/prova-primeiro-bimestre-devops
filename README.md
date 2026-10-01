@@ -1,9 +1,9 @@
 # API de Reservas — TechNova
 
-**Aluno:** Sirlande Martins
-**RA:** 6325269
-**Disciplina:** DevOps — Análise e Desenvolvimento de Sistemas, UniFAAT 2026.2
-**Avaliação:** Prova do Primeiro Bimestre (Aulas 01 a 07)
+- **Aluno:** Sirlande Martins
+- **RA:** 6325269
+- **Disciplina:** DevOps — Análise e Desenvolvimento de Sistemas, UniFAAT 2026.2
+- **Avaliação:** Prova do Primeiro Bimestre (Aulas 01 a 07)
 
 ## Descrição
 
