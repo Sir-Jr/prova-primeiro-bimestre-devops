@@ -923,3 +923,127 @@ todas as versões do bucket antes.
 
 Pareceres emitidos desde o último confirmado: V10.
 ```
+
+### A38 — 30/09/2026 15:32
+
+_Em resposta a:_ “2 - Os prompts de hoje estão salvos só em parte.”
+
+Gerei os dois exports agora, no mesmo lugar de sempre (`/home/sirla/faculdade/projeto_ale/`):
+
+- `prompts-revisora.md`: R01 a R38. O R38 é esta sua mensagem.
+- `spec-revisora.md`: A01 a A37, com os pareceres V01 a V10, sem links locais. As duas menções a `/mnt/project-files` que sobraram são texto dentro dos pareceres V05 e V06, não links.
+
+Varri os dois: nenhuma chave, número de conta, token ou senha. A única ocorrência de "ASIA/AKIA" é a frase do V06 que descreve a varredura.
+
+```
+Exports da IA-revisora atualizados (30/09 15:33 BRT):
+- /home/sirla/faculdade/projeto_ale/prompts-revisora.md → R01–R38
+- /home/sirla/faculdade/projeto_ale/spec-revisora.md → A01–A37,
+  pareceres V01–V10; links locais já convertidos em texto.
+Substituir os dois arquivos inteiros em evidencias/. Esta resposta
+(A38) e qualquer prompt novo ficam para o export de amanhã, junto com
+a T12.
+```
+
+### A39 — 30/09/2026 23:18
+
+_Em resposta a:_ “faça uma revisão geral e veja o checklist para aprovar a prova ou solicitar correções.”
+
+A prova está aprovada no conteúdo: os 13 itens do checklist do enunciado estão atendidos no `main` publicado. Peço só 1 correção pequena no README. O que falta é o roteiro de amanhã: o commit do registro, o `entrega.md` (que ainda não existe e passa por mim antes do PR) e o PR.
+
+```
+Parecer V11 — 23:20 BRT 30/09 (último confirmado pela IA-autora: V10)
+
+Revisão geral (origin/main = 3555a5f, igual ao local): APROVADA com 1
+correção.
+
+Checklist do enunciado, conferido no main publicado:
+ 1 Repo público (HTTP 200 sem login), README com nome + RA, .gitignore ✓
+ 2 37 commits, 8 merges --no-ff, 100% Conventional Commits, sem
+   co-autoria ✓
+ 3 CRUD + /health (app/src/routes/reservas.js, app.js) ✓
+ 4 CRUD no PostgreSQL (db.js; reserva id 2 lida do RDS em curl-aws.txt) ✓
+ 5 Dockerfile multi-stage, não-root (docker-build.txt) ✓
+ 6 docker-compose.yml API + Postgres, volume, rede, healthchecks
+   (compose-ps.txt) ✓
+ 7 Terraform modularizado: modules/vpc, security-group, ec2, rds ✓
+ 8 RDS nas subnets privadas, privado e criptografado (rds-describe.txt,
+   imagens 02-04) ✓
+ 9 Remote state S3 + DynamoDB (infra/backend, providers.tf,
+   terraform-backend.txt, imagens 08-10) ✓
+10 LabInstanceProfile, nenhum aws_iam_* ✓
+11 validate + plan sem erros (terraform-plan.txt, 19 to add) ✓
+12 relatorio.md com a ferramenta no início e 4 questões, todas acima
+   de 10 linhas ✓
+13 destroy executado (terraform-destroy.txt, 19 destroyed) ✓
+Estrutura de pastas do enunciado: completa (app/, docker-compose.yml,
+.env.example, infra/ com backend e modules, evidencias/ com os 3
+arquivos pedidos, relatorio.md). Nenhum arquivo proibido versionado.
+
+Correção (entra no commit docs: de amanhã, antes do entrega.md):
+- README.md l. 3-6: Aluno / RA / Disciplina / Avaliação estão em linhas
+  seguidas sem quebra, e no GitHub viram um parágrafo só. É o ajuste
+  de forma do parecer da T1 (29/09), que não foi aplicado. Terminar
+  cada linha com dois espaços ou usar lista "-". Registrar como E20
+  (ajuste de parecer não aplicado, detectado na revisão geral).
+
+Pendências do roteiro de 01/10 (sem mudança):
+- Working tree da docs/registro-prompts (E19 + "E1–E19" no relatório):
+  coerente, porque o main tem 18 erros e o relatório diz E1–E18. Entra
+  no commit único de amanhã.
+- entrega.md: ainda não existe no fork; passa por mim antes do PR.
+- Não verificado por mim: recursos ativos na AWS hoje (não uso as
+  credenciais). As evidências mostram o destroy completo; só o backend
+  ficou, por decisão.
+
+Pareceres emitidos desde o último confirmado: V11.
+```
+
+### A40 — 01/10/2026 19:32
+
+_Em resposta a:_ “O rascunho do entrega.md está pronto em entregas/provaPrimeiroBi/6325269/entrega.md, sem commit.”
+
+Conferi o `entrega.md` linha a linha contra o modelo do enunciado e cada trecho contra o arquivo de evidência no `main` publicado. Está aprovado, com 1 ajuste de fidelidade e 2 de forma. No repo da prova, o E20 (README em lista), o "E1–E20" e o E19/E20 no `prompts.md` estão corretos, ainda sem commit, como previsto.
+
+```
+Parecer V12 — 19:35 BRT 01/10 (último confirmado pela IA-autora: V11)
+
+Revisão do entrega.md (fork, branch entregas/provaPrimeiroBi/6325269,
+sem commit) + repo da prova (working tree): APROVADO com 3 ajustes.
+
+Conferido:
+- Fork: main = upstream/main (aa8a051); branch com o nome decidido;
+  pasta entregas/provaPrimeiroBi/6325269/ só com o entrega.md.
+- Estrutura e campos iguais ao modelo do enunciado; ferramenta pela
+  opção A; 13/13 itens marcados.
+- Trechos idênticos aos arquivos: compose-ps.txt (l. 5-8),
+  terraform-plan.txt (init l. 8, fmt/validate l. 35, plan -out l. 42,
+  Plan: 19 l. 619), curl-aws.txt (17/17), terraform-destroy.txt
+  (l. 782). Âncora #imagens--imagens bate com o título do índice.
+- Repo da prova: README l. 3-6 em lista (E20), relatório "E1–E20",
+  E19 e E20 no prompts.md. Nome e RA continuam nas linhas 3-4.
+
+Ajustes:
+1. (fidelidade) Trecho do rds-describe.txt: entre Engine e SubnetGroup
+   foram cortadas 4 linhas (Version, MultiAZ, Endpoint, Port) sem
+   (...), mas o texto diz que todo corte foi marcado. Copiar as
+   linhas 9-17 inteiras. O "Version": "16.13" ainda reforça o
+   PostgreSQL 16.
+2. (forma) l. 5: "**Data:** 01/10/2026" sem os dois espaços no fim; no
+   GitHub, Data e Ferramenta viram uma linha só. Acrescentar os dois
+   espaços (o conteúdo continua literal ao modelo).
+3. (números) l. 40: "37 commits e 8 merges" fica errado depois do
+   commit final. Preencher com git rev-list --count main e
+   --merges --count main DEPOIS de congelar o repo e ANTES do commit
+   do entrega.md. Conferir também se docs/registro-prompts aparece no
+   GitHub.
+
+Ordem aprovada: commit único docs: no repo da prova (E19 + E20 +
+prompts + exports da revisora), merge --no-ff, push, congelar →
+atualizar números no entrega.md → commit sem co-autoria → push → PR
+com 1 arquivo e 1 commit, só com a autorização explícita do usuário.
+
+Pareceres emitidos desde o último confirmado: V12.
+```
+
+Antes de congelar, me peça os exports, porque eles precisam incluir este V12 (R39+ e A38+).

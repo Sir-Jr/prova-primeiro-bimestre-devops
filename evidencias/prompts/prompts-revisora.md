@@ -910,3 +910,36 @@ _Texto literal das mensagens do usuário no painel da IA-revisora, em ordem. Hor
 >    - copio os exports da revisora e confiro senha, chaves, conta e links quebrados;
 >    - faço um commit docs: com o merge na main, depois de o parecer e o seu OK passarem pelo fluxo de sempre;
 >    - por último, salvo o progresso na memória.
+
+### R39 — 30/09/2026 19:52
+
+> faça uma revisão geral e veja o checklist para aprovar a prova ou solicitar correções.
+
+### R40 — 30/09/2026 23:17
+
+> faça uma revisão geral e veja o checklist para aprovar a prova ou solicitar correções.
+
+### R41 — 01/10/2026 19:31
+
+> O rascunho do entrega.md está pronto em entregas/provaPrimeiroBi/6325269/entrega.md, sem commit.
+>
+> - Branch: entregas/provaPrimeiroBi/6325269. A main do fork já estava igual à do upstream, então não precisou sincronizar.
+> - Formato: segue o modelo do enunciado ao pé da letra. O campo da ferramenta diz "Claude (Opus 5.5), descrita no relatorio.md", como você decidiu em 30/09.
+> - Checklist: os 13 itens estão marcados.
+> - Seção Evidências:
+>   - uma tabela que liga cada item do checklist ao arquivo do repo e às imagens que comprovam;
+>   - trechos de docker compose ps, validate e plan (Plan: 19 to add), smoke test na AWS (17/17), RDS privado e encriptado, e destroy (19 destroyed);
+>   - onde cortei linhas nos trechos, marquei com (...).
+> - Links: todos os 23 caminhos existem na main publicada do repo da prova.
+>
+> O que corrigi ao conferir com o repo:
+> - O comando real do plan é terraform plan -out=infra.tfplan.
+> - O LabInstanceProfile não está escrito direto no recurso: ele vem do default da variável iam_instance_profile, em infra/variables.tf. Deixei o texto assim.
+>
+> Falta atualizar no passo 4: o texto diz "37 commits e 8 merges". Esse é o número de hoje e vai mudar quando eu fizer o commit final do repo da prova.
+>
+> Próximo passo, com você: levar para a revisora o entrega.md, o diff do relatorio.md (E1–E20), E19/E20 no prompts.md e o README.md (linhas 3–6 viraram lista). O parecer esperado é o V12. Ela já aprovou o V11, que foi o último que recebi.
+
+### R42 — 01/10/2026 19:34
+
+> eu quero os últimos exports
